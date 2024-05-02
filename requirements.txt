@@ -1,2 +1,5 @@
 openai
 python-dotenv
+robotframework
+robotframework-seleniumlibrary
+pytest

@@ -3,11 +3,11 @@ Library    ai_interface/modules/real_test_data_generator/RealTestDataGenerator.p
 Library    SeleniumLibrary
 
 *** Test Cases ***
-Execute Generate 3 Addresses And Search Them On Google Maps
+Generate 3 Addresses And Search Them On Google Maps
    Open Maps
    Set AI Model    openai
-   Set Count    3
-   Set Country    Czech Republic
+   Set Type    address
+   Set Amount   3
    Set Format    "{'addresses':[{'address': address}]}"
    Set Max Tokens    256
    Set Model    gpt-3.5-turbo
@@ -15,6 +15,7 @@ Execute Generate 3 Addresses And Search Them On Google Maps
    Set Top P    1
    Set Frequency Penalty    0
    Set Presence Penalty    0
+   Set Country    Czech Republic
 
    Set Addresses   
     
@@ -22,7 +23,6 @@ Execute Generate 3 Addresses And Search Them On Google Maps
         Search Address    ${address}
         Sleep    5
    END
-   Log    Test execution finished
 
 *** Keywords ***
 
@@ -42,17 +42,21 @@ Open Maps
     Go To    https://maps.google.com
 
 Set Addresses
-    @{addresses}=    Generate Test Addresses    ${AI_MODEL}    ${COUNT}    ${COUNTRY}    ${FORMAT}    ${MAX_TOKENS}
-    ...    ${MODEL}    ${TEMPERATURE}    ${TOP_P}    ${FREQUENCY_PENALTY}    ${PRESENCE_PENALTY}
+    @{addresses}=    Generate Test Data    ${AI_MODEL}    ${TYPE}    ${AMOUNT}    ${FORMAT}    ${MAX_TOKENS}
+    ...    ${MODEL}    ${TEMPERATURE}    ${TOP_P}    ${FREQUENCY_PENALTY}    ${PRESENCE_PENALTY}    country=${COUNTRY}
     Set Test Variable    @{ADDRESSES}    @{addresses}
 
 Set AI Model
     [Arguments]    ${ai_model}
     Set Test Variable    ${AI_MODEL}    ${ai_model}
 
-Set Count
-    [Arguments]    ${count}
-    Set Test Variable    ${COUNT}    ${count}
+Set Type
+    [Arguments]    ${type}
+    Set Test Variable    ${TYPE}    ${type}
+
+Set Amount
+    [Arguments]    ${amount}
+    Set Test Variable    ${AMOUNT}    ${amount}
 
 Set Country
     [Arguments]    ${country}

@@ -20,7 +20,7 @@ class OpenAIService:
             presence_penalty = presence_penalty,
         )
     
-    def validate_prompt(self, model):
+    def validate_prompt(self, model:str):
         models = ["gpt-3.5-turbo"]
         if model not in models:
             raise ValueError(f"Invalid value '{model}' for 'model'. Model not found in the available models.")
