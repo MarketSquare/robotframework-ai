@@ -1,1 +1,92 @@
-# robotframework-ai
+
+# RobotFramework-AI
+
+`RobotFramework-AI` is a library that adds AI functionality to the `Robot Framework`.
+It can generate test data for you using the `RealTestDataGenerator` but also reply to your
+messages with the `Chatbot`.
+
+## RealTestDataGenerator
+
+`RealTestDataGenerator` can generate test data for the `Robot Framework` similar to
+the library `Faker`. The `RealTestDataGenerator` however, generates real existing data, using AI.
+
+To generate test data simply import the package and use the keyword: `Generate Test Data`
+This keyword takes various parameters, some being specific for the generation of certain
+types of test data.
+
+The following parameters can be used (parameters prefixed by an * are required):
+
+- ***ai_model: str:** The AI model to be used, e.g. "openai", "gemini", "copilot", etc. Currently supporting: "openai"
+- ***type: str:** The type of test data to create, e.g. "address", "user_data", etc. Currently supporting: "address"
+- **model: str:** AI model specfic. The model of the AI model to be used. E.g. "gpt-3.5-turbo" when using the "openai" AI model.
+    Default per AI model:
+  - "openai" = "gpt-3.5-turbo"
+- **amount: int = 3** The amount of rows of test data to generate.
+- **format: str = None** The format in which the test data will be given. If None, will return a 2 dimensional list.
+- **max_tokens: int = 256** The token limit for a conversation. Both prompt and response tokens will count towards this limit.
+- **temperature: float = 1** This value determines the creativity of the AI model. Can be anything from 0-2.
+- **top_p: float = 1** Similar to temperature. Determines the selection of tokens before selecting one.
+    The higher the value the more less likely tokens get added to the selection. Can be anything from 0-2. At 1,
+    only the top 50% of tokens will be used when selecting a token at 0 all tokens will be taken into consideration
+- **frequency_penalty: float = 0** Penalizes more frequent token reducing the chance of it reappearing.
+    Negative values encourage it to reuse tokens. Can be anything from -2 to 2.
+- **presence_penalty: float = 0** Exact same as frequency_penalty except its scope is reduced to the immediate context.
+    The immediate context can be seen as one or more paragrahps about a singular subject.
+    Can be anything from -2 to 2.
+- **kwargs: dict:** Additional parameters can be supplied for specific types of test data. These will be explained in per type below
+
+### Addresses
+
+When generating addresses additional parameter are available. These parameters are as follows:
+
+- **Country:str:** The country from which to create addresses. If None, will generate an address from anywhere. Default = None
+
+## Chatbot
+
+`Chatbot` is a simple response generating library for `Robot Framework` similar to
+`ChatGPT` on the web. You can ask it a question or give it a task to have it automatically
+reply to your emails.
+
+The following parameters can be used (parameters prefixed by an * are required):
+
+- ***ai_model: str:** The AI model to be used, e.g. "openai", "gemini", "copilot", etc. Currently supporting: "openai"
+- ***message: str:** The message you want to send to the AI model, e.g. "What is the weather today?"
+- **model: str:** AI model specfic. The model of the AI model to be used. E.g. "gpt-3.5-turbo" when using the "openai" AI model.
+    Default depends on AI model:
+  - "openai" = "gpt-3.5-turbo"
+- **max_tokens: int = 256** The token limit for a conversation. Both prompt and response tokens will count towards this limit.
+- **temperature: float = 1** This value determines the creativity of the AI model. Can be anything from 0-2.
+- **top_p: float = 1** Similar to temperature. Determines the selection of tokens before selecting one.
+    The higher the value the more less likely tokens get added to the selection. Can be anything from 0-2.
+    At 1, only the top 50% of tokens will be used when selecting a token at 0 all tokens will be taken into consideration
+- **frequency_penalty: float = 0** Penalizes more frequent token reducing the chance of it reappearing.
+    Negative values encourage it to reuse tokens. Can be anything from -2 to 2.
+- **presence_penalty: float = 0** Exact same as frequency_penalty except its scope is reduced to the immediate context.
+    The immediate context can be seen as one or more paragrahps about a singular subject.
+    Can be anything from -2 to 2.
+- **keep_history: bool = False** A flag to keep the chat history of previous messages. When settings this to True, your previous prompt and
+    the response by the AI will be saved for the next message. This feature will keep the previous message, so if you want to send
+    two messages and refer to your first message from the second message, you need to set this flag to True in the second message.
+    Leaving this on for the third message aswell will keep both the first and second message.
+
+    **NOTE:** This works by incorporating the previous messages into the prompt, this will charge you again for both the prompt and
+    response. So leaving this on, could quickly drain all your tokens.
+
+- **response_format: dict = None** Can be used to make the response compile to JSON.
+    Set this to { "type": "json_object" } to make the response compile to JSON or None if it shouldn't necessarily.
+
+## AI models
+
+Each module in the RobotFramework-AI library can support multiple different AI models. Each AI model needs an API key for the generation of test data.
+Using the python library the key gets automatically read from a .env file. To use your key, create a .env file in the root directory
+and declare your key there. Each AI model has their own API key. To define a key, create a variable with the name of
+the AI model capitalized followed by "_KEY". Then set this variable to your key.
+
+Example .env file
+
+``` python
+# API keys
+
+OPENAI_KEY="278bxw4m89monwxmu89wm98ufx8hwxfhqwifmxou09qwxp09jmx"
+GEMINI_KEY="cavhjbcZCJKnvmzxcnzkcjkczckzcskjnjn7h38nwd923hdnind"
+```
