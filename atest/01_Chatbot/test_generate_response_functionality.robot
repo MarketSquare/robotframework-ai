@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation    Tests the keep history flag for the keyword generate response
-Library    ../../modules/chatbot/Chatbot.py
+Library    ../../src/RobotFrameworkAI/modules/chatbot/Chatbot.py
 
 
 *** Variables ***
@@ -18,20 +18,20 @@ ${KEEP_HISTORY}    value
 *** Test Cases ***
 Test Keep History
     [Documentation]    Tests whether the AI remembers to respond with fire after saying water
-    Setup Test Parameters
+    Setup Test Arguments
     Set Message    If i say water you say fire
-    Generate Response With Parameters
+    Generate Response With Arguments
     Set Message    Water
     Set Temperature    0
     Set Top P    0
     Set Keep History    True
-    ${response}    Generate Response With Parameters
+    ${response}    Generate Response With Arguments
     Should Contain    ${response}    fire    ignore_case=True
 
 
 *** Keywords ***
-Setup Test Parameters
-    [Documentation]    Set default test parameters
+Setup Test Arguments
+    [Documentation]    Set default test arguments
     Set AI Model    openai
     Set Model    gpt-3.5-turbo
     Set Max Tokens    256
@@ -41,7 +41,7 @@ Setup Test Parameters
     Set Presence Penalty    0
     Set Keep History    False
 
-Generate Response With Parameters
+Generate Response With Arguments
     [Documentation]    Generates a response to a prompt
     ${response}    Generate Response
     ...    ${AI_MODEL}

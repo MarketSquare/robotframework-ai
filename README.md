@@ -11,10 +11,10 @@ messages with the `Chatbot`.
 the library `Faker`. The `RealTestDataGenerator` however, generates real existing data, using AI.
 
 To generate test data simply import the package and use the keyword: `Generate Test Data`
-This keyword takes various parameters, some being specific for the generation of certain
+This keyword takes various arguments, some being specific for the generation of certain
 types of test data.
 
-The following parameters can be used (parameters prefixed by an * are required):
+The following arguments can be used (arguments prefixed by an * are required):
 
 - ***ai_model: str:** The AI model to be used, e.g. "openai", "gemini", "copilot", etc. Currently supporting: "openai"
 - ***type: str:** The type of test data to create, e.g. "address", "user_data", etc. Currently supporting: "address"
@@ -33,11 +33,11 @@ The following parameters can be used (parameters prefixed by an * are required):
 - **presence_penalty: float = 0** Exact same as frequency_penalty except its scope is reduced to the immediate context.
     The immediate context can be seen as one or more paragrahps about a singular subject.
     Can be anything from -2 to 2.
-- **kwargs: dict:** Additional parameters can be supplied for specific types of test data. These will be explained in per type below
+- **kwargs: dict:** Additional arguments can be supplied for specific types of test data. These will be explained in per type below
 
 ### Addresses
 
-When generating addresses additional parameter are available. These parameters are as follows:
+When generating addresses additional argument are available. These arguments are as follows:
 
 - **Country:str:** The country from which to create addresses. If None, will generate an address from anywhere. Default = None
 
@@ -47,7 +47,7 @@ When generating addresses additional parameter are available. These parameters a
 `ChatGPT` on the web. You can ask it a question or give it a task to have it automatically
 reply to your emails.
 
-The following parameters can be used (parameters prefixed by an * are required):
+The following arguments can be used (arguments prefixed by an * are required):
 
 - ***ai_model: str:** The AI model to be used, e.g. "openai", "gemini", "copilot", etc. Currently supporting: "openai"
 - ***message: str:** The message you want to send to the AI model, e.g. "What is the weather today?"
@@ -78,15 +78,28 @@ The following parameters can be used (parameters prefixed by an * are required):
 ## AI models
 
 Each module in the RobotFramework-AI library can support multiple different AI models. Each AI model needs an API key for the generation of test data.
-Using the python library the key gets automatically read from a .env file. To use your key, create a .env file in the root directory
-and declare your key there. Each AI model has their own API key. To define a key, create a variable with the name of
+This key gets read directly from your environment variables. Each AI model has their own API key. To define a key, create a new variable with the name of
 the AI model capitalized followed by "_KEY". Then set this variable to your key.
 
-Example .env file
+**Example API keys**
+OPENAI_KEY=278bxw4m89monwxmu89wm98ufx8hwxfhqwifmxou09qwxp09jmx
+GEMINI_KEY=cavhjbcZCJKnvmzxcnzkcjkczckzcskjnjn7h38nwd923hdnind
 
-``` python
-# API keys
+## Setters
 
-OPENAI_KEY="278bxw4m89monwxmu89wm98ufx8hwxfhqwifmxou09qwxp09jmx"
-GEMINI_KEY="cavhjbcZCJKnvmzxcnzkcjkczckzcskjnjn7h38nwd923hdnind"
-```
+Instead of providing all arguments through this keyword, it is also possible to set each argument beforehand. This way, when making repeated calls, arguments
+do not have to be supplied each time. After setting these arguments they will remain untill set again. When arguments are set and the keyword also has arguments
+supplied, then the supplied arguments will take priority.
+
+**NOTE:** Setting arguments will impact other modules aswell. This means that when setting the temperature to 2, that both the RealTestDataGenerator and the Chatbot
+will use this temperature from then on. This is only the case when both modules share arguments, the arguments that are shared are as followed:
+
+    ai_model, model, max_tokens, temperature, top_p,
+    frequency_penalty, presence_penalty, response_format
+
+Each argument has its own setter, the name of the keyword is 'set' plus the name of the argument e.g. Set AI Model for AI Model.
+In the case of kwargs, use the setter to set individual kwargs, set to None to unset it. The setter takes 2 arguments, the name of
+the kwarg to set and its value.
+To set a kwarg use:
+
+    Set Kwarg    country    Czechia
