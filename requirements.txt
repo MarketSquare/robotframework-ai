@@ -1,0 +1,4 @@
+openai
+robotframework
+robotframework-seleniumlibrary
+pytest
