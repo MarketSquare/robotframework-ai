@@ -126,7 +126,7 @@ class Module:
     
     # Setters
     @keyword
-    def set_ai_model(self, ai_model):
+    def set_ai_model(self, ai_model:str):
         """
         Setter for the AI Model argument.
         ai_model: str: The AI model to be used, e.g. "openai", "gemini", "copilot", etc. Currently supporting: "openai".
@@ -135,7 +135,7 @@ class Module:
         self.ai_model = ai_model
 
     @keyword
-    def set_model(self, model):
+    def set_model(self, model:str):
         """
         Setter for the Model argument.
         model: str: AI model specific. The model of the AI model to be used, e.g., "gpt-3.5-turbo" when using the "openai" AI model.
@@ -146,7 +146,7 @@ class Module:
         self.model = model
 
     @keyword
-    def set_max_tokens(self, max_tokens):
+    def set_max_tokens(self, max_tokens:int):
         """
         Setter for the Max Tokens argument.
         max_tokens: int: The token limit for a conversation. Both prompt and response tokens will count towards this limit.
@@ -156,7 +156,7 @@ class Module:
         self.max_tokens = max_tokens
 
     @keyword
-    def set_temperature(self, temperature):
+    def set_temperature(self, temperature:float):
         """
         Setter for the Temperature argument.
         temperature: float: This value determines the creativity of the AI model. Can be anything from 0-2.
@@ -166,7 +166,7 @@ class Module:
         self.temperature = temperature
 
     @keyword
-    def set_top_p(self, top_p):
+    def set_top_p(self, top_p:float):
         """
         Setter for the Top P argument.
         top_p: float: Similar to temperature. Determines the selection of tokens before selecting one.
@@ -178,7 +178,7 @@ class Module:
         self.top_p = top_p
 
     @keyword
-    def set_frequency_penalty(self, frequency_penalty):
+    def set_frequency_penalty(self, frequency_penalty:float):
         """
         Setter for the Frequency Penalty argument.
         frequency_penalty: float: Penalizes more frequent tokens, reducing the chance of them reappearing.
@@ -189,7 +189,7 @@ class Module:
         self.frequency_penalty = frequency_penalty
 
     @keyword
-    def set_presence_penalty(self, presence_penalty):
+    def set_presence_penalty(self, presence_penalty:float):
         """
         Setter for the Presence Penalty argument.
         presence_penalty: float: Similar to frequency_penalty but its scope is reduced to the immediate context.
@@ -201,7 +201,7 @@ class Module:
         self.presence_penalty = presence_penalty
 
     @keyword
-    def set_response_format(self, response_format):
+    def set_response_format(self, response_format:str):
         """
         Setter for the Response Format argument.
         response_format: dict: Can be used to make the response compile to JSON.

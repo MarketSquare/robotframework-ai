@@ -163,7 +163,7 @@ class RealTestDataGenerator(Module):
     
     # Setters
     @keyword
-    def set_type(self, type):
+    def set_type(self, type:str):
         """
         Setter for the Type argument.
         type: str: The type of test data to create, e.g., "address", "user_data", etc. Currently supporting: "address".
@@ -172,7 +172,7 @@ class RealTestDataGenerator(Module):
         self.type = type
 
     @keyword
-    def set_amount(self, amount):
+    def set_amount(self, amount:int):
         """
         Setter for the Amount argument.
         amount: int: The amount of rows of test data to generate.
@@ -182,7 +182,7 @@ class RealTestDataGenerator(Module):
         self.amount = amount
 
     @keyword
-    def set_format(self, format):
+    def set_format(self, format:str):
         """
         Setter for the Format argument.
         format: str: The format in which the test data will be given. If None, will return a 2-dimensional list.

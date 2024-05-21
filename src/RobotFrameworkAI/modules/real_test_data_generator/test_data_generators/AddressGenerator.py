@@ -15,7 +15,7 @@ class AddressGenerator(TestDataGenerator):
     def create_prompt_message(self, amount:int, format:str, address_kwargs:dict):
         system_message = """
             You generate a list of just addresses nothing else not the company name, in json.
-            Call the list 'addresses' and the addresses 'address', don't use any newline characters
+            Call the list 'addresses' and each list item is a dictionary with the key 'address', don't use any newline characters
         """
         country = address_kwargs.get("country", None)
         system_message += f", in the format: {format}" if format is not None else ""
@@ -28,5 +28,5 @@ class AddressGenerator(TestDataGenerator):
         try:
             addresses = json.loads(response)
         except json.JSONDecodeError:
-            raise Exception("The response couldn't be parsed to JSON.")
+            raise Exception(f"The response couldn't be parsed to JSON.\nResponse:\n\n{response}")
         return [address["address"] for address in addresses["addresses"]]

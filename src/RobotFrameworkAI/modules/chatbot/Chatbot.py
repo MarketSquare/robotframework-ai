@@ -148,7 +148,7 @@ class Chatbot(Module):
 
     # Setters
     @keyword
-    def set_message(self, message):
+    def set_message(self, message:str):
         """
         Setter for the Message argument.
         message: str: The message you want to send to the AI model, e.g., "What is the weather today?".
@@ -157,7 +157,7 @@ class Chatbot(Module):
         self.message = message
 
     @keyword
-    def set_keep_history(self, keep_history):
+    def set_keep_history(self, keep_history:bool):
         """
         Setter for the Keep History argument.
         keep_history: bool: A flag to keep the chat history of previous messages. When setting this to True, your previous prompt and

@@ -35,11 +35,23 @@ The following arguments can be used (arguments prefixed by an * are required):
     Can be anything from -2 to 2.
 - **kwargs: dict:** Additional arguments can be supplied for specific types of test data. These will be explained in per type below
 
+**NOTE:** Be careful with changing the temperature, top p, frequency- and presence penalty as it will likely deviate from the format we expect it to return.
+
 ### Addresses
 
 When generating addresses additional argument are available. These arguments are as follows:
 
 - **Country:str:** The country from which to create addresses. If None, will generate an address from anywhere. Default = None
+
+### Examples
+
+Generate 3 addresses from anywhere using OpenAI:
+
+    Generate Test Data    openai    address
+
+Generate 10 addresses from Finland using the gpt-3.5-turbo from OpenAI in the default format with a token limit at 1024, temperature at 1, top p at .5 and frequency- and presence penalty at 0
+
+    Generate Test Data    openai    address    gpt-3.5-turbo    10    None    1024    1    .5    0    0    country=finland
 
 ## Chatbot
 
@@ -75,6 +87,21 @@ The following arguments can be used (arguments prefixed by an * are required):
 - **response_format: dict = None** Can be used to make the response compile to JSON.
     Set this to { "type": "json_object" } to make the response compile to JSON or None if it shouldn't necessarily.
 
+### Examples
+
+Generate a response to a question using OpenAI
+
+    Generate Response    openai    What is the wheather today?
+
+Declare a rule in the first message and refer to it in the second message
+
+    Generate Response    openai    If I say water you say fire
+    Generate Response    openai    Water    keep_history=True
+
+Generate the meaning of life in a json format using the gpt-3.5-turbo from OpenAI in the default format with a token limit at 1024, temperature at 2, top p at .5 and frequency- and presence penalty at 0 without using the previous messages in the response.
+
+    Generate Response    openai    What is the meaning of life? In json.    gpt-3.5-turbo    1024    2    .5    0    0    False    {"type": "json_object"}   
+
 ## AI models
 
 Each module in the RobotFramework-AI library can support multiple different AI models. Each AI model needs an API key for the generation of test data.
@@ -103,3 +130,26 @@ the kwarg to set and its value.
 To set a kwarg use:
 
     Set Kwarg    country    Czechia
+
+### Examples
+
+Generate 3 addresses from anywhere using OpenAI:
+
+    Set AI Model    openai
+    Set Type    address
+    Generate Test Data
+
+Generate 10 addresses from Finland using the gpt-3.5-turbo from OpenAI in the default format with a token limit at 1024, temperature at 1, top p at .5 and frequency- and presence penalty at 0
+
+    Set AI Model    openai
+    Set Type    address
+    Set Model    gpt-3.5-turbo
+    Set Amount    10
+    Set Format    None
+    Set Max Tokens    1024
+    Set Temperature    1
+    Set Top P    .5
+    Set Frequency Penalty    0
+    Set Presence Penalty    0
+    Set Kwarg    country    finland
+    Generate Test Data
