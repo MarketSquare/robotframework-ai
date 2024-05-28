@@ -20,3 +20,7 @@ class Prompt:
         self.message = message
         self.parameters = parameters
         self.metadata = metadata
+
+    def __str__(self):
+        parameters_str = ', '.join([f"({key}: {value})" for key, value in self.parameters.items()])
+        return f"Prompt: {self.config}, (Message: {self.message}), {parameters_str}, {self.metadata}"

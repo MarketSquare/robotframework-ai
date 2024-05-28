@@ -4,6 +4,8 @@ from robot import run
 from RobotFrameworkAI.modules.chatbot.Chatbot import Chatbot
 from RobotFrameworkAI.modules.real_test_data_generator.RealTestDataGenerator import RealTestDataGenerator as RTDG
 
+from RobotFrameworkAI.logger.logger_config import setup_logging
+
 def real_test_data_generator():
     generator = RTDG()
     generator.set_ai_model("openai")
@@ -28,13 +30,15 @@ def chatbot():
 
 
 def robot_tests(s=''):
-    run("atest/"+s)
+    run("atest/"+s, listener="atest/listeners/LoggerListener.py")
 
 def pytests():
     pytest.main(["utest/"])
 
 if __name__ == "__main__":
-    real_test_data_generator()
-    chatbot()
-    robot_tests()
-    pytests()
+    setup_logging(enabled=True, for_tests=False, console_logging=False ,file_logging=True)
+    
+    # real_test_data_generator()
+    # chatbot()
+    # robot_tests()
+    # pytests()

@@ -10,5 +10,9 @@ setup(
     author_email="stijndejong125@gmail.com",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
+    include_package_data=True,
+    package_data={
+        '': ['*.misc']
+    },
     install_requires=requirements,
 )

@@ -11,3 +11,7 @@ class PromptMetadata:
         self.module = module
         self.time = int(time.time())    # Current time in unix
         self.kwargs = kwargs
+
+    def __str__(self):
+        additional_args = ', '.join([f"({key}: {value})" for key, value in self.kwargs.items()])
+        return f"(Module: {self.module}), (Time: {self.time})" + (f", {additional_args}" if additional_args else "")

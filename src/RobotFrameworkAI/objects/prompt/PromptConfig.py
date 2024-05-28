@@ -9,3 +9,7 @@ class PromptConfig:
         self.model = model
         self.response_format = response_format
         self.kwargs = kwargs
+
+    def __str__(self):
+        additional_args = ', '.join([f"({key}: {value})" for key, value in self.kwargs.items()])
+        return f"(AI Model: {self.ai_model}), (Model: {self.model}), (Response Format: {self.response_format})" + (f", {additional_args}" if additional_args else "")

@@ -153,3 +153,29 @@ Generate 10 addresses from Finland using the gpt-3.5-turbo from OpenAI in the de
     Set Presence Penalty    0
     Set Kwarg    country    finland
     Generate Test Data
+
+## Logging
+
+The RobotFramework-AI library includes configurable logging capabilities to assist with debugging and monitoring. This logging setup ensures that log messages are handled appropriately, including support for Unicode characters.
+
+### Enabling Logging
+
+To enable logging, use the Setup Logging keyword provided by the RobotFramework-AI library. This keyword allows you to configure console and file logging, and to enable or disable logging as needed.
+
+The Setup Logging keyword takes the following arguments:
+
+- **enabled: bool = True** Determines whether logging should be turned on.
+- **for_test: bool = False** Can be used to log logs to a different folder specific for test logs.
+    Will log to the logs_test folder instead of logs if set to True.
+- **console_logging: bool = True** Determines whether logs should be printed in the console.
+- **file_logging: bool = True** Determines whether logs should be logged to a file.
+
+### Examples
+
+To log to both the console and a file:
+
+    Setup Logging
+
+To log for tests without console logging:
+
+    Setup Logging    True    True    False
