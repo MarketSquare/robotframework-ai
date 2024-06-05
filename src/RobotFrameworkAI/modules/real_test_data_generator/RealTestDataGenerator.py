@@ -3,6 +3,7 @@ from robot.api.deco import keyword, library
 from RobotFrameworkAI.modules.Module import Module
 from RobotFrameworkAI.modules.real_test_data_generator.test_data_generators.AddressGenerator import AddressGenerator
 from RobotFrameworkAI.modules.real_test_data_generator.test_data_generators.UserDataGenerator import UserDataGenerator
+from RobotFrameworkAI.modules.real_test_data_generator.test_data_generators.PhoneNumberGenerator import PhoneNumberGenerator
 import logging
 
 
@@ -27,6 +28,7 @@ class RealTestDataGenerator(Module):
         self.name = "real_test_data_generator"
         self.generators = {
             "address": AddressGenerator(),
+            "phone_number": PhoneNumberGenerator(), #Only added, havent updated docstring yet
             "user_data": UserDataGenerator(),
         }
         self.type = None

@@ -9,7 +9,7 @@ from RobotFrameworkAI.logger.logger_config import setup_logging
 def real_test_data_generator():
     generator = RTDG()
     generator.set_ai_model("openai")
-    generator.set_type("address")
+    generator.set_type("phone_number")
     generator.set_amount(3)
     generator.set_kwarg("country", "czech republic")
     response = generator.generate_test_data()
