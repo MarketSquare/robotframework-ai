@@ -114,12 +114,11 @@ class Module:
             error_messages.append(f"Invalid value `{frequency_penalty}` for `frequency_penalty`. Value must be between -2 and 2 (inclusive).")
         if not self.is_valid_presence_penalty(presence_penalty):
             error_messages.append(f"Invalid value `{presence_penalty}` for `presence_penalty`. Value must be between -2 and 2 (inclusive).")
-        try:
-            if error_messages:
-                raise ValueError(f"Invalid input argument(s): {' '.join(error_messages)}")
-        except Exception as e:
-            logger.error(e)
-            raise
+
+        if error_messages:
+            error_message = f"Invalid input argument(s): {' '.join(error_messages)}"
+            logger.error(error_message)
+            raise ValueError(error_message)
         return True
     
     def is_valid_max_tokens(self, max_tokens:int):

@@ -117,12 +117,10 @@ class Chatbot(Module):
 
         message, keep_history = self.get_default_values_for_chatbot_specifc_arguments(message, keep_history)
 
-        try:
-            if ai_model is None or message is None:
-                raise ValueError(f"Both ai_model and message are required and can't be None. AI model: `{ai_model}`, Message: `{message}`")
-        except Exception as e:
-            logger.error(e)
-            raise
+        if ai_model is None or message is None:
+            error_message = f"Both ai_model and message are required and can't be None. AI model: `{ai_model}`, Message: `{message}`"
+            logger.error(error_message)
+            raise ValueError(error_message)
         
         self.validate_common_input_arguments(max_tokens, temperature, top_p, frequency_penalty, presence_penalty)
         message = self.create_message(message, keep_history)

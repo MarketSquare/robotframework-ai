@@ -27,12 +27,10 @@ class AI_Interface:
     
     def send_prompt(self, prompt):
         ai_model = prompt.config.ai_model
-        try:
-            if ai_model not in self.ai_models:
-                raise ValueError(f"Invalid ai_model: `{ai_model}`. Valid ai_models are: `{'`, `'.join(self.ai_models)}`")
-        except Exception as e:
-            logger.error(e)
-            raise
+        if ai_model not in self.ai_models:
+            error_message = f"Invalid ai_model: `{ai_model}`. Valid ai_models are: `{'`, `'.join(self.ai_models)}`"
+            logger.error(error_message)
+            raise ValueError(error_message)
 
         ai_model_strategy = self.ai_models[ai_model]
         print(f"Request being handled by {ai_model}...")

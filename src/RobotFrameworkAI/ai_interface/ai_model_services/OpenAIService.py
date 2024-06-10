@@ -56,10 +56,8 @@ class OpenAIService(AIModelStrategy):
     
     def validate_prompt(self, model:str):
         models = ["gpt-3.5-turbo"]
-        try:
-            if model not in models:
-                raise ValueError(f"Invalid model: `{model}`. Valid models are: `{'`, `'.join(models)}`")
-        except Exception as e:
-            logger.error(e)
-            raise
+        if model not in models:
+            error_message = f"Invalid model: `{model}`. Valid models are: `{'`, `'.join(models)}`"
+            logger.error(error_message)
+            raise ValueError(error_message)
         return True

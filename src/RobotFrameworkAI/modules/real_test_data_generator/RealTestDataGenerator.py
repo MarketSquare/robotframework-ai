@@ -123,12 +123,10 @@ class RealTestDataGenerator(Module):
         response_format = {"type": "json_object"}
         type, amount, format, kwargs = self.get_default_values_for_real_test_data_generator_specifc_arguments(type, amount, format, kwargs)
 
-        try:
-            if ai_model is None or type is None:
-                raise ValueError(f"Both ai_model and type are required and can't be None. AI model: `{ai_model}`, Type: `{type}`")
-        except Exception as e:
-            logger.error(e)
-            raise
+        if ai_model is None or type is None:
+            error_message = f"Both ai_model and type are required and can't be None. AI model: `{ai_model}`, Type: `{type}`"
+            logger.error(error_message)
+            raise ValueError(error_message)
 
         self.validate_common_input_arguments(max_tokens, temperature, top_p, frequency_penalty, presence_penalty)
         self.validate_module_specific_arguments(type)
@@ -164,12 +162,11 @@ class RealTestDataGenerator(Module):
         error_messages = []        
         if not self.is_valid_type(type):
             error_messages.append(f"Invalid value '{type}' for 'type'. Value must be in: {', '.join(self.generators.keys())}.")
-        try:
-            if error_messages:
-                raise ValueError(f"Invalid input argument(s): {' '.join(error_messages)}")
-        except Exception as e:
-            logger.error(e)
-            raise
+
+        if error_messages:
+            error_message = f"Invalid input argument(s): {' '.join(error_messages)}"
+            logger.error(error_message)
+            raise ValueError(error_message)
         return True
 
     def is_valid_type(self, type:str):
