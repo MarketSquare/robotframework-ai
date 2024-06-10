@@ -1,9 +1,15 @@
+import importlib
+import inspect
+import os
+import pkgutil
+import logging
 from robot.api.deco import keyword, library
+
 from RobotFrameworkAI.ai_interface.AI_Interface import AI_Interface
 from RobotFrameworkAI.objects.prompt.Prompt import Prompt
 from RobotFrameworkAI.objects.prompt.PromptConfig import PromptConfig
 from RobotFrameworkAI.objects.prompt.PromptMetadata import PromptMetadata
-import logging
+from RobotFrameworkAI.objects.prompt.ai_tool_data.AIToolData import AIToolData
 
 
 logger = logging.getLogger(__name__)
@@ -42,6 +48,8 @@ class Module:
     def __init__(self) -> None:
         self.ai_interface = AI_Interface()
         self.name = "base_module"
+        self.ai_tool = None
+        # Set arguments
         self.ai_model = None
         self.model = None
         self.max_tokens = 256
@@ -53,6 +61,7 @@ class Module:
 
     def create_prompt(
             self,
+            ai_tool:str,
             ai_model:str,
             message:list[dict],
             model:str,
@@ -61,9 +70,10 @@ class Module:
             top_p:float,
             frequency_penalty:float,
             presence_penalty:float,
-            response_format:dict
+            response_format:dict,
+            ai_tool_data:AIToolData = None
         ) -> Prompt:
-        config = PromptConfig(ai_model, model, response_format)
+        config = PromptConfig(ai_tool, ai_model, model, response_format)
         arguments = {
             "max_tokens": max_tokens,
             "temperature": temperature,
@@ -76,11 +86,12 @@ class Module:
             config,
             message,
             arguments,
-            metadata
+            metadata,
+            ai_tool_data
         )
         return prompt
 
-    def get_default_values_for_common_arguments(
+    def get_default_values_for_common_arguments_for_text_generators(
             self,
             ai_model: str,
             model: str,
@@ -101,6 +112,22 @@ class Module:
         presence_penalty = presence_penalty if presence_penalty is not None else self.presence_penalty
         response_format = response_format if response_format is not None else self.response_format
         return ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format
+
+    def get_default_values_for_common_arguments_for_assistants(
+            self,
+            ai_model: str,
+            model: str,
+            temperature: float,
+            top_p: float,
+            response_format: dict
+        ):
+        # Set default values for arguments
+        ai_model = ai_model if ai_model is not None else self.ai_model
+        model = model if model is not None else self.model
+        temperature = temperature if temperature is not None else self.temperature
+        top_p = top_p if top_p is not None else self.top_p
+        response_format = response_format if response_format is not None else self.response_format
+        return ai_model, model, temperature, top_p, response_format
 
     def validate_common_input_arguments(self, max_tokens:int, temperature:float, top_p:float, frequency_penalty:float, presence_penalty:float):
         error_messages = []

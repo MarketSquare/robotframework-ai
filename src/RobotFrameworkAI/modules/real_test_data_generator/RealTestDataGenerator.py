@@ -29,6 +29,8 @@ class RealTestDataGenerator(Module):
             "address": AddressGenerator(),
             "user_data": UserDataGenerator(),
         }
+        self.ai_tool = "text_generation"
+        # Set arguments
         self.type = None
         self.amount = 3
         self.format = None
@@ -116,7 +118,7 @@ class RealTestDataGenerator(Module):
         """        
         logger.debug(f"Calling keyword: Generate Test Data with arguments: (ai_model: {ai_model}), (type: {type}), (model: {model}), (amount: {amount}), (format: {format}), (max_tokens: {max_tokens}), (temperature: {temperature}), (top_p: {top_p}), (frequency_penalty: {frequency_penalty}), (presence_penalty: {presence_penalty}), (response_format: {response_format}), (kwargs: {kwargs})")
         # Set defaut values for arguments
-        argument_values = self.get_default_values_for_common_arguments(
+        argument_values = self.get_default_values_for_common_arguments_for_text_generators(
             ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format
         )
         ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format = argument_values
@@ -135,6 +137,7 @@ class RealTestDataGenerator(Module):
         generator = self.generators[type]
         message = generator.create_prompt_message(amount, format, kwargs)
         prompt = self.create_prompt(
+            self.ai_tool,
             ai_model,
             message,
             model,
@@ -145,7 +148,7 @@ class RealTestDataGenerator(Module):
             presence_penalty,
             response_format
         )
-        response = self.ai_interface.send_prompt(prompt)
+        response = self.ai_interface.call_ai_tool(prompt)
         response = generator.format_response(response)
         return response
 

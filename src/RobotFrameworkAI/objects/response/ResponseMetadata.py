@@ -1,3 +1,6 @@
+import time
+
+
 class ResponseMetadata:
     """
     An object containing the metadata for the Response.
@@ -10,7 +13,8 @@ class ResponseMetadata:
     The amount of tokens used in the response.
     The time of completion. 
     """
-    def __init__(self, ai_model: str, model: str, finish_reason: str, prompt_tokens: int, completion_tokens: int, time: int, **kwargs) -> None:
+    def __init__(self, ai_tool:str, ai_model: str, model: str, finish_reason: str = None, prompt_tokens: int = 0, completion_tokens: int = 0, time: int = int(time.time()), **kwargs) -> None:
+        self.ai_tool = ai_tool
         self.ai_model = ai_model
         self.model = model
         self.finish_reason = finish_reason
@@ -22,4 +26,4 @@ class ResponseMetadata:
 
     def __str__(self):
         additional_args = ', '.join([f"({key}: {value})" for key, value in self.kwargs.items()])
-        return f"(AI Model: {self.ai_model}), (Model: {self.model}), (Finish Reason: {self.finish_reason}), (Prompt Tokens: {self.prompt_tokens}), (Completion Tokens: {self.completion_tokens}), (Time: {self.time})" + (f", {additional_args}" if additional_args else "")
+        return f"(AI Tool: {self.ai_tool}), (AI Model: {self.ai_model}), (Model: {self.model}), (Finish Reason: {self.finish_reason}), (Prompt Tokens: {self.prompt_tokens}), (Completion Tokens: {self.completion_tokens}), (Time: {self.time})" + (f", {additional_args}" if additional_args else "")

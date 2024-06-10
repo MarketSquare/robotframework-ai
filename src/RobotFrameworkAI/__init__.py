@@ -4,7 +4,7 @@ import inspect
 
 from .modules.real_test_data_generator.RealTestDataGenerator import RealTestDataGenerator
 from .modules.chatbot.Chatbot import Chatbot
-from .logger.logger_config import setup_logging
+from .logger.logger import setup_logging
 
 @library
 class RobotFrameworkAI(RealTestDataGenerator, Chatbot):

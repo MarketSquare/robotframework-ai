@@ -15,6 +15,7 @@ class AddressGenerator(TestDataGenerator):
     """
     def __init__(self) -> None:
         super().__init__()
+        self.name = "address"
 
     def create_prompt_message(self, amount:int, format:str, address_kwargs:dict):
         system_message = """

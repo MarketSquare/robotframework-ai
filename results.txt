@@ -1,0 +1,2270 @@
+Based on the file paths provided, I will generate the class diagram code for PlantUML. I'll analyze the content of the files to determine the relationships between the classes.
+
+Here is the PlantUML code for the class diagram based on the provided file paths:
+
+```plantuml
+@startuml
+
+package "RobotFrameworkAI" {
+    package "ai_interface" {
+        class AI_Interface
+        package "ai_model_services" {
+            class AIModelStrategy
+            class GeminiService
+            class OpenAIService
+        }
+    }
+
+    package "logger" {
+        class Logger
+        package "ascii" {
+            class Ascii
+        }
+    }
+
+    package "modules" {
+        interface Module
+        package "assistant" {
+            class Assistant
+        }
+        package "chatbot" {
+            class Chatbot
+        }
+        package "real_test_data_generator" {
+            class RealTestDataGenerator
+            package "test_data_generators" {
+                class AddressGenerator
+                class TestDataGenerator
+                class UserDataGenerator
+            }
+        }
+    }
+
+    package "objects" {
+        package "prompt" {
+            class Prompt
+            class PromptConfig
+            class PromptMetadata
+        }
+        package "response" {
+            class Response
+            class ResponseMetadata
+        }
+    }
+}
+
+AI_Interface --> AIModelStrategy
+AI_Interface --> GeminiService
+AI_Interface --> OpenAIService
+
+Logger --> Ascii
+
+Module <|.. Assistant
+Module <|.. Chatbot
+Module <|.. RealTestDataGenerator
+Module <|-- Prompt
+Module <|-- Response
+
+RealTestDataGenerator --> AddressGenerator
+RealTestDataGenerator --> TestDataGenerator
+RealTestDataGenerator --> UserDataGenerator
+
+Prompt <|-- PromptConfig
+Prompt <|-- PromptMetadata
+
+Response <|-- ResponseMetadata
+
+@enduml
+```
+
+This PlantUML code represents the class diagram based on the provided file paths. It includes packages, classes, interfaces, and their relationships.Based on the provided files and the extracted class information, I�ve generated the following PlantUML code to create a class diagram:
+
+```plantuml
+@startuml
+
+' Define main classes
+class AI_Interface {
+    - ai_models: dict
+    + send_prompt(prompt)
+}
+
+class AIModelStrategy {
+    - name: str
+    - ai_model: object
+    - default_model: str
+    - models: list
+    + send_prompt(prompt)
+    + validate_model(model: str)
+}
+
+class GeminiService {
+    - ai_model: None
+    + send_prompt(prompt)
+}
+
+class OpenAIService {
+    - name: str
+    - ai_model: OpenAI
+    - default_model: str
+    - models: list
+    + send_prompt(prompt)
+    + assist()
+}
+
+class Prompt {
+    - config: PromptConfig
+    - message: list
+    - parameters: dict
+    - metadata: PromptMetadata
+}
+
+class PromptConfig {
+    - ai_model: str
+    - model: str
+    - response_format: dict
+}
+
+class PromptMetadata {
+    ' Assuming attributes here based on typical metadata fields
+}
+
+class Response {
+    ' Assuming attributes here based on what a response might include
+}
+
+class ResponseMetadata {
+    ' Assuming attributes here based on what response metadata might include
+}
+
+class Module {
+    - ai_interface: AI_Interface
+    - name: str
+    - ai_model: None
+    - model: None
+    - max_tokens: int
+    - temperature: float
+    - top_p: float
+    - frequency_penalty: float
+    - presence_penalty: float
+    - response_format: dict
+    + create_prompt(ai_model: str, message: list, model: str, max_tokens: int, temperature: float, top_p: float, frequency_penalty: float, presence_penalty: float, response_format: dict): Prompt
+}
+
+class RealTestDataGenerator {
+    - generators: dict
+    - type: None
+    - amount: int
+    - format: None
+    - kwargs: dict
+    + generate_test_data(ai_model: str, type: str, model: str, amount: int, format: str, max_tokens: int, temperature: float, top_p: float, frequency_penalty: float, presence_penalty: float, response_format: dict, **kwargs)
+}
+
+class AddressGenerator {
+    + create_prompt_message(amount: int, format: str, address_kwargs: dict)
+    + format_response(response)
+}
+
+class UserDataGenerator {
+    + create_prompt_message(amount, format)
+    + format_response(response)
+}
+
+class Chatbot {
+    - history: list
+    - message: None
+    - keep_history: bool
+    - response_format: dict
+    + generate_response(ai_model: str, message: str, model: str, max_tokens: int, temperature: float, top_p: float, frequency_penalty: float, presence_penalty: float, keep_history: bool, response_format: dict)
+}
+
+class Assistant {
+    - name: str
+    + assist()
+}
+
+' Define relationships
+AI_Interface o-- GeminiService
+AI_Interface o-- OpenAIService
+AIModelStrategy <|-- GeminiService
+AIModelStrategy <|-- OpenAIService
+PromptConfig --> AI_Interface
+Prompt --> PromptConfig
+Prompt --> PromptMetadata
+Prompt --> Module
+Module <|-- RealTestDataGenerator
+Module <|-- Chatbot
+Module <|-- Assistant
+RealTestDataGenerator o-- AddressGenerator
+RealTestDataGenerator o-- UserDataGenerator
+
+@enduml
+```
+
+This PlantUML code will generate a class diagram reflecting the relationships and structures of the provided classes and modules in the given files. The attributes and functions have been included based on the given class definitions. Adjustments might be necessary depending on the complete code details and additional methods or properties not covered in this extraction       .Here is the PlantUML code to generate the class diagram for the provided code:
+
+```plantuml
+@startuml
+
+' Define classes, attributes, and methods
+class AIModelStrategy {
+  - name: str
+  - ai_model: object
+  - default_model: object
+  - models: list
+  + __init__() 
+  + send_prompt(prompt)
+  + validate_model(model: str): bool
+}
+
+class GeminiService {
+  __init__()
+  send_prompt(prompt)
+}
+
+class OpenAIService {
+  - name: str
+  - ai_model: OpenAI
+  - default_model: str
+  - models: list
+  + __init__()
+  + send_prompt(prompt)
+}
+
+class AI_Interface {
+  - ai_models: dict
+  + __init__()
+  + send_prompt(prompt)
+}
+
+class Module {
+  - ai_interface: AI_Interface
+  - name: str
+  - ai_model: object
+  - model: str
+  - max_tokens: int
+  - temperature: float
+  - top_p: float
+  - frequency_penalty: float
+  - presence_penalty: float
+  - response_format: dict
+  + __init__()
+  + create_prompt(ai_model: str, message: list[dict], model: str, max_tokens: int, temperature: float, top_p: float, frequency_penalty: float, presence_penalty: float, response_format: dict): Prompt
+  + get_default_values_for_common_arguments(ai_model: str, model: str, max_tokens: int, temperature: float, top_p: float, frequency_penalty: float, presence_penalty: float, response_format: dict): tuple
+}
+
+class RealTestDataGenerator {
+  - generators: dict
+  - type: str
+  - amount: int
+  - format: str
+  - response_format: dict
+  - kwargs: dict
+  + __init__()
+  + generate_test_data(ai_model: str, type: str, model: str, amount: int, format: str, max_tokens: int, temperature: float, top_p: float, frequency_penalty: float, presence_penalty: float, response_format: dict, **kwargs)
+  + get_default_values_for_real_test_data_generator_specific_arguments(type: str, amount: int, format: str, kwargs: dict): tuple
+  + validate_module_specific_arguments(type: str): bool
+  + is_valid_type(type: str): bool
+  + set_type(type: str)
+  + set_amount(amount: int)
+  + set_format(format: str)
+}
+
+class AddressGenerator {
+  + __init__()
+  + create_prompt_message(amount: int, format: str, address_kwargs: dict): list
+  + format_response(response): list
+}
+
+class TestDataGenerator {
+  + __init__()
+  + create_prompt_message(amount, format)
+  + format_response(response)
+  + create_message(system_message: str, user_message: str): list[dict]
+}
+
+class UserDataGenerator {
+  + __init__()
+  + create_prompt_message(amount, format)
+  + format_response()
+}
+
+class Chatbot {
+  - history: list
+  - message: str
+  - keep_history: bool
+  - response_format: dict
+  + __init__()
+  + generate_response(ai_model: str, message: str, model: str, max_tokens: int, temperature: float, top_p: float, frequency_penalty: float, presence_penalty: float, keep_history: bool, response_format: dict)
+}
+
+class Prompt {
+  - config: PromptConfig
+  - message: list
+  - parameters: dict
+  - metadata: PromptMetadata
+  + __init__(config: PromptConfig, message: list, parameters: dict, metadata: PromptMetadata)
+  + __str__()
+}
+
+class PromptConfig {
+  - ai_model: str
+  - model: str
+  - response_format: dict
+  - kwargs: dict
+  + __init__(ai_model: str, model: str, response_format: dict, **kwargs)
+  + __str__()
+}
+
+' Define inheritances
+GeminiService -|> AIModelStrategy
+OpenAIService -|> AIModelStrategy
+AddressGenerator -|> TestDataGenerator
+UserDataGenerator -|> TestDataGenerator
+RealTestDataGenerator -|> Module
+Chatbot -|> Module
+
+' Define relations
+Module ..> AI_Interface
+RealTestDataGenerator o-- AddressGenerator
+RealTestDataGenerator o-- UserDataGenerator
+Prompt o-- PromptConfig
+Prompt o-- PromptMetadata
+
+@enduml
+```
+
+This code defines the classes, their attributes and methods, as well as the inheritances and relationships between them. Graphical tools can render this into a class diagram.```plantuml
+@startuml
+
+class AI_Interface {
+    - input_data: str
+    - output_data: str
+    
+    + get_input_data(): str
+    + set_input_data(data: str): void
+    + get_output_data(): str
+    + set_output_data(data: str): void
+}
+
+class AIModelStrategy {
+    - model_name: str
+    
+    + build_model(): void
+    + train_model(): void
+    + predict(data: str): str
+}
+
+AI_Interface --|> AIModelStrategy
+
+class GeminiService {
+    + __init__(model_name: str)
+    + update_model(model_name: str): void
+}
+
+AIModelStrategy --|> GeminiService
+
+class OpenAIService {
+    + __init__(model_name: str)
+    + update_model(model_name: str): void
+}
+
+AIModelStrategy --|> OpenAIService
+
+class logger {
+    - log_file_path: str
+    
+    + log_info(info: str): void
+    + log_error(error: str): void
+}
+
+class ascii {
+    + generate_ascii_art(text: str): str
+}
+
+logger --|> ascii
+
+class Module {
+    - module_name: str
+    
+    + get_module_name(): str
+    + set_module_name(name: str): void
+}
+
+class Assistant {
+    + initiate_assistant(): void
+    + perform_tasks(task: str): void
+}
+
+Module --|> Assistant
+
+class Chatbot {
+    + initiate_chatbot(): void
+    + process_input(user_input: str): str
+}
+
+Module --|> Chatbot
+
+class RealTestDataGenerator {
+    - data_type: str
+
+    + generate_data(): dict
+}
+
+Module --|> RealTestDataGenerator
+
+class AddressGenerator {
+    + generate_address(): str
+}
+
+RealTestDataGenerator --|> AddressGenerator
+
+class TestDataGenerator {
+    + generate_test_data(): dict
+}
+
+RealTestDataGenerator --|> TestDataGenerator
+
+class UserDataGenerator {
+    + generate_user_data(): dict
+}
+
+RealTestDataGenerator --|> UserDataGenerator
+
+class Prompt {
+    - prompt_data: str
+    
+    + display_prompt(): str
+}
+
+class PromptConfig {
+    - config_options: dict
+    
+    + get_config_value(key: str): str
+    + set_config_value(key: str, value: str): void
+}
+
+Prompt --|> PromptConfig
+
+class PromptMetadata {
+    - metadata_info: str
+    
+    + get_metadata_info(): str
+    + update_metadata(info: str): void
+}
+
+Prompt --|> PromptMetadata
+
+class Response {
+    - response_data: str
+    
+    + get_response_data(): str
+    + set_response_data(data: str): void
+}
+
+class ResponseMetadata {
+    - metadata_info: str
+    
+    + get_metadata_info(): str
+    + update_metadata(info: str): void
+}
+
+Response --|> ResponseMetadata
+
+@enduml
+``````plantuml
+@startuml
+title Class Diagram
+
+class File {
+    - path: String
+    + File(String path)
+    + getPath(): String
+    + setPath(String path): void
+}
+
+class Directory {
+    - path: String
+    + Directory(String path)
+    + getPath(): String
+    + setPath(String path): void
+}
+
+class TextFile {
+    + content: String
+    + TextFile(String path, String content)
+    + getContent(): String
+    + setContent(String content): void
+}
+
+class ImageFile {
+    + resolution: String
+    + ImageFile(String path, String resolution)
+    + getResolution(): String
+    + setResolution(String resolution): void
+}
+
+class ZipFile {
+    + compressionLevel: int
+    + ZipFile(String path, int compressionLevel)
+    + getCompressionLevel(): int
+    + setCompressionLevel(int compressionLevel): void
+}
+
+Directory <|-- File
+File <|-- TextFile
+File <|-- ImageFile
+File <|-- ZipFile
+
+@enduml
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/RobotFrameworkAI/__init__.py
+from robot.api.deco import keyword, library
+from functools import wraps
+import inspect
+
+from .modules.real_test_data_generator.RealTestDataGenerator import RealTestDataGenerator
+from .modules.chatbot.Chatbot import Chatbot
+from .logger.logger import setup_logging
+
+@library
+class RobotFrameworkAI(RealTestDataGenerator, Chatbot):
+    """
+    """
+    @keyword
+    @wraps(setup_logging)
+    def setup_logging(self, *args, **kwargs):
+        # Dynamically fetch the signature of the original setup_logging function
+        sig = inspect.signature(setup_logging)
+        
+        # Bind the provided arguments to the original function's signature
+        bound_args = sig.bind(*args, **kwargs)
+        bound_args.apply_defaults()
+
+        # Call the original setup_logging function with the bound arguments
+        setup_logging(*bound_args.args, **bound_args.kwargs)
+
+ROBOT_LIBRARY_SCOPE = "GLOBAL"
+
+
+
+src/RobotFrameworkAI/ai_interface\AI_Interface.py
+import importlib
+import inspect
+import os
+import pkgutil
+import sys
+from RobotFrameworkAI.ai_interface.ai_model_services.GeminiService import GeminiService
+from RobotFrameworkAI.ai_interface.ai_model_services.OpenAIService import OpenAIService
+import logging
+
+from RobotFrameworkAI.ai_interface.ai_model_services.AIModelStrategy import AIModelStrategy
+
+
+logger = logging.getLogger(__name__)
+
+
+
+
+
+class AI_Interface:
+    """
+    This class handles the communication between modules and the AI models.
+    This class together with the classes in the ai_model_service folder form a strategy pattern.
+    In this strategy pattern, this class serves the role as the context.
+    The AI model strategies will be used it.
+
+    After creating a new strtegy, it will dynamically be discovered, requiring no changes to this class.
+    """
+
+    def __init__(self) -> None:
+        self.ai_models: list[AIModelStrategy] = self._discover_ai_models()
+
+    def _discover_ai_models(self):
+        """
+        Dynamically collects all AIModelStrategy implementations in the ai_model_service folder.
+
+        A dictionary will be created with the name of each AIModelStrategy as the key and an instance as value.
+        The name comes from the name attribute in the implementation of the AIModelStrategy.
+        """
+        ai_models = {}
+        package = 'RobotFrameworkAI.ai_interface.ai_model_services'
+        package_path = os.path.join(os.path.dirname(__file__), 'ai_model_services')
+        
+        logger.debug(f"Looking for modules in package path: {package_path}")
+
+        if not os.path.exists(package_path):
+            logger.error(f"Package path does not exist: {package_path}")
+            return ai_models
+
+        for _, module_name, _ in pkgutil.iter_modules([package_path]):
+            logger.debug(f"Found module: {module_name}")
+            try:
+                module = importlib.import_module(f"{package}.{module_name}")
+                logger.debug(f"Imported module: {module_name}")
+            except Exception as e:
+                logger.error(f"Failed to import module {module_name}: {e}")
+                continue
+            
+            for name, obj in inspect.getmembers(module, inspect.isclass):
+                if issubclass(obj, AIModelStrategy) and obj is not AIModelStrategy:
+                    try:
+                        instance = obj()
+                        ai_models[instance.name] = instance
+                        logger.debug(f"Discovered AI model strategy: {instance.name} in class {name}")
+                    except Exception as e:
+                        logger.error(f"Failed to instantiate {name}: {e}")
+        return ai_models
+
+    def call_ai_tool(self, prompt):
+        ai_model = prompt.config.ai_model
+        try:
+            if ai_model not in self.ai_models:
+                raise ValueError(f"Invalid ai_model: `{ai_model}`. Valid ai_models are: `{'`, `'.join(self.ai_models)}`")
+        except Exception as e:
+            logger.error(e)
+            raise
+
+        ai_model_strategy = self.ai_models[ai_model]
+        print(f"Request being handled by {ai_model}...")
+        
+        logger.debug(f"Sending prompt to {ai_model}: {prompt}")
+
+        response = ai_model_strategy.call_ai_tool(prompt)
+
+        logger.debug(f"Recieved response from {ai_model}: {response}")
+        return response
+
+
+        
+
+
+
+
+
+src/RobotFrameworkAI/ai_interface\__init__.py
+# This is a placeholder for an empty file
+
+
+
+src/RobotFrameworkAI/ai_interface\ai_model_services\AIModelSpecificAITool.py
+class AIModelSpecificAITool:
+    def __init__(self) -> None:
+        self.ai_model_name: str = None
+        self.client: object = None
+        self.models: list[str] = None
+        self.default_model: str = None
+
+
+src/RobotFrameworkAI/ai_interface\ai_model_services\AIModelStrategy.py
+import importlib
+import inspect
+import logging
+import os
+import pkgutil
+
+
+logger = logging.getLogger(__name__)
+
+class AIModelStrategy:
+    """
+    The interface class for AI model strategies.
+    A prompt can be handled by different AI models.
+    Each AI model can be used as a strategy to perform the task of responding to the prompt.
+
+    To add a new AI model, create a new class in this folder and have it inherit this interface.
+    Create the logic for unpacking a Prompt object, sending it to the AI model and pack its 
+    response in a Response object.
+
+    Make sure the send_prompt method is implemented to accept the Prompt and return the Response.
+    Adding an object of this class to the ai_models in the AI_Interface class will allow you to
+    to use that AI model for the generation of data.
+    """
+    def __init__(self) -> None:
+        self.ai_tools = None
+        self.name = None
+
+    def _discover_tools(self, package: str, tool_interface, ai_client):
+        """
+        Dynamically collects all tool implementations in the specified package.
+
+        A dictionary will be created with the tool attribute as the key and an instance as value.
+        """
+        tools = {}
+
+        package_path = os.path.join(os.path.dirname(__file__), package)
+        package = "RobotFrameworkAI.ai_interface.ai_model_services." + package
+
+        logger.debug(f"Looking for modules in package path: {package_path}")
+
+        if not os.path.exists(package_path):
+            logger.error(f"Package path does not exist: {package_path}")
+            return tools
+
+        for _, module_name, _ in pkgutil.iter_modules([package_path]):
+            logger.debug(f"Found module: {module_name}")
+            try:
+                module = importlib.import_module(f"{package}.{module_name}")
+                logger.debug(f"Imported module: {module_name}")
+            except Exception as e:
+                logger.error(f"Failed to import module {module_name}: {e}")
+                continue
+
+            for name, obj in inspect.getmembers(module, inspect.isclass):
+                if issubclass(obj, tool_interface) and obj is not tool_interface:
+                    try:
+                        instance = obj(ai_client)
+                        tools[obj.tool_name] = instance
+                        logger.debug(f"Discovered tool: {obj.tool_name} in class {name}")
+                    except Exception as e:
+                        logger.error(f"Failed to instantiate {name}: {e}")
+        return tools
+
+    def call_ai_tool(self, prompt):
+        model = prompt.config.ai_model
+        tool_name = prompt.config.ai_tool
+        self.validate_tool(tool_name)
+        tool = self.ai_tools[tool_name]
+        self.validate_model(model, tool)
+
+        return tool.call_ai_tool()
+
+    def validate_tool(self, tool_name: str):
+        if tool_name not in self.ai_tools:
+            error_message = f"Invalid tool: `{tool_name}`. Valid tools are: `{', '.join(self.ai_tools.keys())}`"
+            logger.error(error_message)
+            raise ValueError(error_message)
+        return True
+
+    def validate_model(self, model:str, tool):
+        models = tool.models
+        try:
+            if model not in models:
+                raise ValueError(f"Invalid model: `{model}`. Valid models are: `{'`, `'.join(models)}`")
+        except Exception as e:
+            logger.error(e)
+            raise
+        return True
+
+
+
+src/RobotFrameworkAI/ai_interface\ai_model_services\GeminiService.py
+
+
+
+from RobotFrameworkAI.ai_interface.ai_model_services.AIModelStrategy import AIModelStrategy
+
+
+class GeminiService(AIModelStrategy):    
+    """
+    THIS CLASS IS JUST AN EXAMPLE FOR NOW AND SHOULD/CAN NOT BE USED AS IT DOES NOTHING
+
+    This class is an implementation of the AIModelStrategy interface.
+    This is an strategy to handle task of responding to prompts.
+    This strategy does so by using the API from Google.
+    """
+    def __init__(self) -> None:
+        super().__init__()
+        self.name = "gemini"
+        client = None
+        # self.ai_tools = self._discover_tools("openai_tools", GeminiTool, client)
+        
+    def send_prompt(self, prompt):
+        return "Beep boop"
+
+
+src/RobotFrameworkAI/ai_interface\ai_model_services\OpenAIService.py
+import os
+from openai import OpenAI
+
+from RobotFrameworkAI.ai_interface.ai_model_services.AIModelStrategy import AIModelStrategy
+from RobotFrameworkAI.objects.response.Response import Response
+from RobotFrameworkAI.objects.response.ResponseMetadata import ResponseMetadata
+import logging
+
+from RobotFrameworkAI.ai_interface.ai_model_services.openai_tools.OpenAITool import OpenAITool
+
+# List of allowed file extensions
+ALLOWED_EXTENSIONS = {
+    "c", "cpp", "css", "csv", "docx", "gif", "html", "java", "jpeg", "jpg", "js", "json", "md", "pdf", 
+    "php", "png", "pptx", "py", "rb", "tar", "tex", "ts", "txt", "webp", "xlsx", "xml", "zip"
+}
+
+logger = logging.getLogger(__name__)
+
+
+class OpenAIService(AIModelStrategy):
+    """
+    This class is an implementation of the AIModelStrategy interface.
+    This is an strategy to handle task of responding to prompts.
+    This strategy does so by using the API from OpenAI.
+    """
+    def __init__(self) -> None:
+        super().__init__()
+        self.name = "openai"
+        client = OpenAI(api_key=os.environ["OPENAI_KEY"])
+        self.ai_tools = self._discover_tools("openai_tools", OpenAITool, client)
+
+
+    # def
+
+    # def assist():
+    #     pass
+
+    # def create_assistant(self):
+    #     assistant = self.ai_model.beta.assistants.create(
+    #         name="Test error explainer",
+    #         instructions="""When a Robot Framework test fails, you get called and read there code.
+    #         Based on the code you explain why the test fails or give an error.
+    #         You then also give suggestion on how to improve said code so the test succeeds""",
+    #         model="gpt-3.5-turbo",
+    #         tools=[{"type": "file_search"}],
+    #     )
+    #     return assistant
+
+    # def collect_files():
+    #     pass
+
+    # def add_files(self):
+    #     self.ai_model.beta.vector_stores.create(name="Code")
+
+
+
+src/RobotFrameworkAI/ai_interface\ai_model_services\__init__.py
+# This is a placeholder for an empty file
+
+
+
+src/RobotFrameworkAI/ai_interface\ai_model_services\openai_tools\OpenAIAssistant.py
+from openai import OpenAI
+from RobotFrameworkAI.ai_interface.ai_model_services.openai_tools.OpenAITool import OpenAITool
+from RobotFrameworkAI.ai_interface.ai_model_tools.AssistantTool import AssistantTool
+from RobotFrameworkAI.objects.response.Response import Response
+from RobotFrameworkAI.objects.response.ResponseMetadata import ResponseMetadata
+
+
+class OpenAIAssistant(OpenAITool, AssistantTool):
+    def __init__(self, client) -> None:
+        OpenAITool().__init__()
+        AssistantTool().__init__()
+        self.client:OpenAI = client
+
+    def create_assistant(self, prompt):
+        assistant_data = prompt.ai_tool_data
+
+        model = self.default_model if prompt.config.model is None else prompt.config.model
+
+        self.assistant = self.client.beta.assistants.create(
+            model = model,
+            instructions = assistant_data.instructions,
+            tools = [{"type": "file_search"}],
+            temperature = prompt.parameters["temperature"],
+            top_p = prompt.parameters["top_p"],
+            response_format = prompt.prompt_config.response_format
+        )
+
+    def attach_files_to_assistant(self, files):
+        vector_store = self.client.beta.vector_stores.create()
+        file_batch = self.client.beta.vector_stores.file_batches.upload_and_poll(
+            vector_store_id=vector_store.id, files=[(path, content.encode('utf-8')) for path, content in files]
+        )
+        print(file_batch.file_counts)
+        self.assistant = self.client.beta.assistants.update(
+            assistant_id = self.assistant.id,
+            tool_resources = {"file_search": {"vector_store_ids": [vector_store.id]}},
+        )
+
+    def send_prompt_to_assistant(self, prompt):
+        thread = self.client.beta.threads.create(
+            messages = prompt.message
+        )
+        run = self.client.beta.threads.runs.create_and_poll(
+            thread_id = thread.id, assistant_id = self.assistant.id
+        )
+        messages = list(self.client.beta.threads.messages.list(thread_id=thread.id, run_id=run.id))
+        message = messages[0]
+        message_content = message.content[0].text.value
+        model = self.default_model if prompt.config.model is None else prompt.config.model
+        token_usage = run.usage
+        response_metadata = ResponseMetadata(
+            self.tool_name, self.ai_model_name, model, None, token_usage.prompt_tokens, token_usage.completion_tokens, message.created_at
+        )
+        response = Response(message_content, response_metadata)
+        return response
+
+
+
+src/RobotFrameworkAI/ai_interface\ai_model_services\openai_tools\OpenAITextGenerator.py
+from openai import OpenAI
+from RobotFrameworkAI.ai_interface.ai_model_services.openai_tools.OpenAITool import OpenAITool
+from RobotFrameworkAI.ai_interface.ai_model_tools import TextGeneratorTool
+from RobotFrameworkAI.objects.response.Response import Response
+from RobotFrameworkAI.objects.response.ResponseMetadata import ResponseMetadata
+import logging
+
+
+logger = logging.getLogger(__name__)
+
+
+class OpenAITextGenerator(OpenAITool, TextGeneratorTool):
+    def __init__(self, client) -> None:
+        OpenAITool.__init__()
+        TextGeneratorTool.__init__()
+        self.client:OpenAI = client
+    
+    def send_prompt(self, prompt):
+
+        model = self.default_model if prompt.config.model is None else prompt.config.model
+        self.validate_model(model)
+        arguments = prompt.parameters
+        chat_completion = self.ai_model.chat.completions.create(
+            model = model,
+            messages = prompt.message,
+            response_format= prompt.config.response_format,
+            max_tokens = arguments["max_tokens"],
+            temperature = arguments["temperature"],
+            top_p = arguments["top_p"],
+            frequency_penalty = arguments["frequency_penalty"],
+            presence_penalty = arguments["presence_penalty"]
+        )
+        logger.debug(f"{self.ai_model_name} {self.tool_name}: {chat_completion}")
+        metadata = ResponseMetadata(
+            self.tool_name,
+            self.ai_model_name,
+            model,
+            chat_completion.choices[0].finish_reason,
+            chat_completion.usage.prompt_tokens,
+            chat_completion.usage.completion_tokens,
+            chat_completion.created
+        )
+        response = Response(
+            chat_completion.choices[0].message.content,
+            metadata
+        )
+        return response
+
+
+src/RobotFrameworkAI/ai_interface\ai_model_services\openai_tools\OpenAITool.py
+from RobotFrameworkAI.ai_interface.ai_model_services.AIModelSpecificAITool import AIModelSpecificAITool
+
+
+class OpenAITool(AIModelSpecificAITool):
+    def __init__(self) -> None:
+        super().__init__()
+        self.ai_model_name:str = "openai"
+        self.client = None
+        self.models:list[str] = ["gpt-3.5-turbo", "gpt-4o"]
+        self.default_model:str = "gpt-4o"
+        
+
+
+src/RobotFrameworkAI/ai_interface\ai_model_services\openai_tools\__init__.py
+# This is a placeholder for an empty file
+
+
+
+src/RobotFrameworkAI/ai_interface\ai_model_tools\AssistantTool.py
+from abc import ABC, abstractmethod
+import os
+from RobotFrameworkAI.ai_interface.ai_model_tools.BaseAITool import BaseAITool
+
+
+class AssistantTool(ABC, BaseAITool):
+
+    # File types that can be used with the assistant
+    ALLOWED_EXTENSIONS = {"c", "cpp", "css", "csv", "docx", "gif", "html", "java", "jpeg", "jpg", "js", "json", "md", "pdf", 
+                        "php", "png", "pptx", "py", "rb", "tar", "tex", "ts", "txt", "webp", "xlsx", "xml", "zip"}
+    
+    def __init__(self) -> None:
+        self.tool_name = "assistant"
+
+    def call_ai_tool(self, prompt):
+        assistant_data = prompt.ai_tool_data
+        if assistant_data.create_new_assistant:
+            self.setup_assistant(prompt)
+        return self.send_prompt_to_assistant(prompt)
+
+    def setup_assistant(self, prompt):
+        assistant_data = prompt.ai_tool_data
+        file_paths = self.collect_files(assistant_data.folder_path)
+        # Add the file paths to the instructions as this could aid the assistant in understanding the files
+        assistant_data.instructions += f"\n The files structure of the given files is as follows:\n{"\n".join(file_paths)}"
+        self.assistant = self.create_assistant(prompt, file_paths)
+        self.attach_files_to_assistant(file_paths)
+
+
+    def collect_files(self, folder_path):
+        file_paths = []
+        for root, dirs, files in os.walk(folder_path):
+            for file in files:
+                if self.has_allowed_extension(file):
+                    full_path = os.path.join(root, file)
+                    file_paths.append(full_path)
+        file_streams = [(path, self.read_file_with_placeholder_content_if_empty(path)) for path in file_paths]
+        return file_streams
+
+    @staticmethod
+    def has_allowed_extension(file_name):
+        """
+        Check if the file has one of the allowed extensions.
+
+        Parameters:
+        - file_name (str): The name of the file.
+
+        Returns:
+        - bool: True if the file has an allowed extension, False otherwise.
+        """
+        return file_name.split('.')[-1] in AssistantTool.ALLOWED_EXTENSIONS
+
+    @staticmethod
+    def read_file_with_placeholder_content_if_empty(file_path):
+        """
+        Read a file and return its content. If the file is empty, return placeholder content.
+
+        Parameters:
+        - file_path (str): The path to the file.
+
+        Returns:
+        - str: The content of the file or placeholder content if the file is empty.
+        """
+        if os.path.getsize(file_path) == 0:
+            return "# This is a placeholder for an empty file\n"
+        with open(file_path, 'r') as file:
+            return file.read()
+
+    @abstractmethod
+    def create_assistant(self):
+        pass
+
+    @abstractmethod
+    def attach_files_to_assistant(self, file_paths):
+        pass
+
+    @abstractmethod
+    def send_prompt_to_assistant(self, prompt):
+        pass
+
+
+src/RobotFrameworkAI/ai_interface\ai_model_tools\BaseAITool.py
+from abc import ABC, abstractmethod
+
+
+class BaseAITool(ABC):
+    def __init__(self) -> None:
+        self.tool_name = None
+
+    @abstractmethod
+    def call_ai_tool(self, prompt):
+        pass
+
+
+
+src/RobotFrameworkAI/ai_interface\ai_model_tools\TextGeneratorTool.py
+from abc import ABC, abstractmethod
+from RobotFrameworkAI.ai_interface.ai_model_tools.BaseAITool import BaseAITool
+
+
+class TextGeneratorTool(ABC, BaseAITool):
+    def __init__(self) -> None:
+        self.tool_name = "text_generation"
+
+    def call_ai_tool(self, prompt):
+        return self.send_prompt(prompt)
+
+    @abstractmethod
+    def send_prompt(self, prompt):
+        pass
+
+
+src/RobotFrameworkAI/ai_interface\ai_model_tools\__init__.py
+# This is a placeholder for an empty file
+
+
+
+src/RobotFrameworkAI/logger\logger.py
+import logging
+import os
+import sys
+from logging.handlers import TimedRotatingFileHandler
+from datetime import datetime
+from RobotFrameworkAI.logger.ascii.ascii import string_to_ascii
+
+class UnicodeSafeFormatter(logging.Formatter):
+    """
+    A logging formatter that ensures safe handling of Unicode characters.
+
+    This formatter extends the base logging.Formatter to ensure that log messages
+    are correctly encoded as Unicode. It handles cases where the log message is
+    provided as bytes and decodes them into a proper string using UTF-8 encoding.
+    Additionally, it converts non-string log messages to strings.
+
+    This formatter allows the logging of characters such as à, ê, etc.
+    """
+    def format(self, record):
+        if isinstance(record.msg, bytes):
+            record.msg = record.msg.decode('utf-8', 'replace')
+        elif not isinstance(record.msg, str):
+            record.msg = str(record.msg)
+        
+        record.message = record.getMessage()
+        if self.usesTime():
+            record.asctime = self.formatTime(record, self.datefmt)
+        s = self.formatMessage(record)
+        
+        if record.exc_info:
+            if not record.exc_text:
+                record.exc_text = self.formatException(record.exc_info)
+        if record.exc_text:
+            if s[-1:] != "\n":
+                s = s + "\n"
+            s = s + record.exc_text
+        return s
+
+class UnicodeSafeHandler(logging.StreamHandler):
+    """
+    A logging stream handler that ensures safe handling of Unicode characters.
+
+    This handler extends the base logging.StreamHandler to ensure that log messages
+    containing Unicode characters are correctly handled and written to the stream.
+    It ensures that messages are properly formatted as strings and handles
+    exceptions that occur during logging.
+
+    This handler allows the logging of characters such as à, ê, etc.
+    """
+    def emit(self, record):
+        try:
+            msg = self.format(record)
+            stream = self.stream
+            if isinstance(msg, str):
+                msg = msg + '\n'
+            stream.write(msg)
+            self.flush()
+        except Exception:
+            self.handleError(record)
+
+def create_handlers(log_folder = "logs"):
+    """
+    Creates the handlers for logging to the console and a file.
+
+    Will log to the logs folder where it creates a log file with the date of creation as its name.
+    It uses the UnicodeSafeFormatter and -Handler to handle all unicode characters correctly.
+    """
+    
+    os.makedirs(log_folder, exist_ok=True)
+    log_filename = os.path.join(log_folder, datetime.now().strftime("%Y-%m-%d.log"))
+
+    # Creating the file handler with Unicode safe formatter
+    formatter = UnicodeSafeFormatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S'
+    )
+    file_handler = TimedRotatingFileHandler(log_filename, when="midnight", interval=1, encoding='utf-8')
+    file_handler.suffix = "%Y-%m-%d"
+    file_handler.setFormatter(formatter)
+
+    # Creating the console handler with Unicode safe formatter
+    console_handler = UnicodeSafeHandler(sys.stdout)
+    console_handler.setFormatter(formatter)
+
+    if os.path.getsize(log_filename) == 0:
+        write_ascii_to_file(log_filename)
+    return console_handler, file_handler
+
+def setup_logging(enabled=True, for_tests=False, console_logging=True, file_logging=True):
+    """
+    Sets up the necessary evironment to allow logging.
+
+    This will create a logs folder and a log file with the date of creation as its name.
+
+    Has 4 argument flags.
+
+    enabled: default True, if set to False this keyword does nothing.
+    for_tests: default False, if set to True logs the logs to the logs_test folder instead of the logs folder.
+    console_logging: default True, set to False to disable the logs being printed to the console.
+    file_logging: default True, set to False to disable the logs being logged to a file.
+    """
+    if not enabled:
+        return
+    console_handler, file_handler = create_handlers("logs_test") if for_tests else create_handlers()
+
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.DEBUG)
+
+    if root_logger.hasHandlers():
+        root_logger.handlers.clear()
+
+    if console_logging:
+        root_logger.addHandler(console_handler)
+    if file_logging:
+        root_logger.addHandler(file_handler)
+
+    logging.getLogger(__name__).debug(f"Calling keyword: Setup Logging with arguments: (enabled: {enabled}), (for_tests: {for_tests}), (console_logging: {console_logging}), (file_logging: {file_logging})")
+
+def write_ascii_to_file(file_path):
+    """
+    Create ascii art on top of the file showing the word --LOGS-- followed by the current date.
+    """
+    ascii_text = []
+    ascii_text.extend(string_to_ascii("--LOGS--", 28))
+    ascii_text.extend(string_to_ascii(datetime.now().strftime("%Y-%m-%d"), 14))
+    print(ascii_text)
+    with open(file_path, 'w') as f:
+        f.write('\n'+'\n'.join(ascii_text)+'\n')
+
+
+
+src/RobotFrameworkAI/logger\__init__.py
+# This is a placeholder for an empty file
+
+
+
+src/RobotFrameworkAI/logger\ascii\ascii.py
+import os
+
+
+def get_ascii_art(char):
+    ascii_order = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789?!-"
+    file_path = os.path.join(os.path.dirname(__file__), 'ascii.misc')
+    with open(file_path, 'r') as f:
+        ascii_symbols = f.read().split('\n\n')
+    index = ascii_order.find(char)
+    return ascii_symbols[0].split('\n')[11 * index: 11 * (index + 1)]
+
+def string_to_ascii(str, empty_cols=0):
+    ascii_art_str = [' '*empty_cols for _ in range(11)]  # Initialize with empty lines
+    for char in str:
+        ascii_art_char = get_ascii_art(char)
+        for i in range(11):
+            ascii_art_str[i] += ascii_art_char[i]  # Concatenate lines horizontally
+    return ascii_art_str[:10]
+
+
+
+src/RobotFrameworkAI/logger\ascii\__init__.py
+# This is a placeholder for an empty file
+
+
+
+src/RobotFrameworkAI/modules\Module.py
+import importlib
+import inspect
+import os
+import pkgutil
+import logging
+from robot.api.deco import keyword, library
+
+from RobotFrameworkAI.ai_interface.AI_Interface import AI_Interface
+from RobotFrameworkAI.objects.prompt.Prompt import Prompt
+from RobotFrameworkAI.objects.prompt.PromptConfig import PromptConfig
+from RobotFrameworkAI.objects.prompt.PromptMetadata import PromptMetadata
+from RobotFrameworkAI.objects.prompt.ai_tool_data.AIToolData import AIToolData
+
+
+logger = logging.getLogger(__name__)
+
+
+@library
+class Module:
+    """
+    The interface for all modules.
+
+    A module is a class containing keywords for the Robot Framework to use.
+    They use AI to perform the task they are intended to do.
+    This can be the generation of test data or just a simple chatbot that answers your questions.
+
+    In this base class for modules common code is shared. This includes the creation of Prompt objects and
+    the validation and the setting of common arguments.
+
+    The setters can be used to set the defaut values for the arguments for each keyword.
+    All attributes and setters here are common arguments and are shared between every module.
+    This also means that setting these arguments will set them for every module.
+
+    To create a new module, create a new folder in the modules folder for all its logic.
+    Create a keyword that atleast accepts all these arguments and uses the get_default_values_for_common_arguments
+    method to set the values of each argument incase they are not given.
+    Make sure each arguments defaults to None so the setters can take effect.
+    
+    Call the create_prompt method to create a Prompt and use this with the send_prompt method from the AI_Interface.
+    This wil return a Response which then needs to be structured in the way the users of the module expect it.
+
+    NOTE: When creating a package all module will get inherited by the RobotFrameworkAI library. This way all
+    keywords and methods will be available. An anoying side effect of this is that methods in seperate classes
+    but with the same name will both be available. This causes only the method of the first inherited class to
+    be available.
+    """
+
+    def __init__(self) -> None:
+        self.ai_interface = AI_Interface()
+        self.name = "base_module"
+        self.ai_tool = None
+        self.ai_tools = self._discover_ai_tools()
+        # Set arguments
+        self.ai_model = None
+        self.model = None
+        self.max_tokens = 256
+        self.temperature = 1
+        self.top_p = .5
+        self.frequency_penalty = 0
+        self.presence_penalty = 0
+        self.response_format = None
+
+    def create_prompt(
+            self,
+            ai_tool:str,
+            ai_model:str,
+            message:list[dict],
+            model:str,
+            max_tokens:int,
+            temperature:float,
+            top_p:float,
+            frequency_penalty:float,
+            presence_penalty:float,
+            response_format:dict
+        ) -> Prompt:
+        config = PromptConfig(ai_tool, ai_model, model, response_format)
+        arguments = {
+            "max_tokens": max_tokens,
+            "temperature": temperature,
+            "top_p": top_p,
+            "frequency_penalty": frequency_penalty,
+            "presence_penalty": presence_penalty
+        }
+        metadata = PromptMetadata(self.name)
+        ai_tool_data = None
+        prompt = Prompt(
+            config,
+            message,
+            arguments,
+            metadata,
+            ai_tool_data
+        )
+        return prompt
+
+    def _discover_ai_tools(self):
+        """
+        Dynamically collects all AIToolData implementations in the ai_tool_data folder.
+
+        A dictionary will be created with the name of each AIToolData as the key and an instance as value.
+        The name comes from the name attribute in the implementation of the AIToolData.
+        """
+        ai_tools = {}
+        package = 'RobotFrameworkAI.objects.prompt.ai_tool_data'
+        package_path = os.path.join(os.path.dirname(__file__), 'objects', 'prompt', 'ai_tool_data')
+
+        logger.debug(f"Looking for modules in package path: {package_path}")
+
+        if not os.path.exists(package_path):
+            logger.error(f"Package path does not exist: {package_path}")
+            return ai_tools
+
+        for _, module_name, _ in pkgutil.iter_modules([package_path]):
+            logger.debug(f"Found module: {module_name}")
+            try:
+                module = importlib.import_module(f"{package}.{module_name}")
+                logger.debug(f"Imported module: {module_name}")
+            except Exception as e:
+                logger.error(f"Failed to import module {module_name}: {e}")
+                continue
+
+            for name, obj in inspect.getmembers(module, inspect.isclass):
+                if issubclass(obj, AIToolData) and obj is not AIToolData:
+                    try:
+                        instance = obj()
+                        ai_tools[instance.name] = instance
+                        logger.debug(f"Discovered AI tool: {instance.name} in class {name}")
+                    except Exception as e:
+                        logger.error(f"Failed to instantiate {name}: {e}")
+        return ai_tools
+
+    def get_default_values_for_common_arguments(
+            self,
+            ai_model: str,
+            model: str,
+            max_tokens: int,
+            temperature: float,
+            top_p: float,
+            frequency_penalty: float,
+            presence_penalty: float,
+            response_format: dict
+        ):
+        # Set defaut values for arguments
+        ai_model = ai_model if ai_model is not None else self.ai_model
+        model = model if model is not None else self.model
+        max_tokens = max_tokens if max_tokens is not None else self.max_tokens
+        temperature = temperature if temperature is not None else self.temperature
+        top_p = top_p if top_p is not None else self.top_p
+        frequency_penalty = frequency_penalty if frequency_penalty is not None else self.frequency_penalty
+        presence_penalty = presence_penalty if presence_penalty is not None else self.presence_penalty
+        response_format = response_format if response_format is not None else self.response_format
+        return ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format
+
+    def validate_common_input_arguments(self, max_tokens:int, temperature:float, top_p:float, frequency_penalty:float, presence_penalty:float):
+        error_messages = []
+        if not self.is_valid_max_tokens(max_tokens):
+            error_messages.append(f"Invalid value `{max_tokens}` for `max_tokens`. Value must be greater than 0 and less than or equal to 4096.")
+        if not self.is_valid_temperature(temperature):
+            error_messages.append(f"Invalid value `{temperature}` for `temperature`. Value must be between 0 and 2 (inclusive).")
+        if not self.is_valid_top_p(top_p):
+            error_messages.append(f"Invalid value `{top_p}` for `top_p`. Value must be between 0 and 1 (inclusive).")
+        if not self.is_valid_frequency_penalty(frequency_penalty):
+            error_messages.append(f"Invalid value `{frequency_penalty}` for `frequency_penalty`. Value must be between -2 and 2 (inclusive).")
+        if not self.is_valid_presence_penalty(presence_penalty):
+            error_messages.append(f"Invalid value `{presence_penalty}` for `presence_penalty`. Value must be between -2 and 2 (inclusive).")
+        try:
+            if error_messages:
+                raise ValueError(f"Invalid input argument(s): {' '.join(error_messages)}")
+        except Exception as e:
+            logger.error(e)
+            raise
+        return True
+    
+    def is_valid_max_tokens(self, max_tokens:int):
+        return 0 < max_tokens <= 4096
+    def is_valid_temperature(self, temperature:float):
+        return 0 <= temperature <= 2
+    def is_valid_top_p(self, top_p:float):
+        return 0 <= top_p <= 2
+    def is_valid_frequency_penalty(self, frequency_penalty:float):
+        return -2 <= frequency_penalty <= 2
+    def is_valid_presence_penalty(self, presence_penalty:float):
+        return -2 <= presence_penalty <= 2
+
+    def create_ai_tool_data(self, ai_tool, ai_tool_data):
+        pass
+
+
+    # Setters
+    @keyword
+    def set_ai_model(self, ai_model: str):
+        """
+        Setter for the AI Model argument.
+        ai_model: str: The AI model to be used, e.g. "openai", "gemini", "copilot", etc. Currently supporting: "openai".
+        See the RobotFrameworkAI docs for more information about setters.
+        """
+        logger.debug(f"Calling keyword: Set AI Model. Changing AI Model from `{self.ai_model}` to `{ai_model}`")
+        self.ai_model = ai_model
+
+    @keyword
+    def set_model(self, model: str):
+        """
+        Setter for the Model argument.
+        model: str: AI model specific. The model of the AI model to be used, e.g., "gpt-3.5-turbo" when using the "openai" AI model.
+        Default per AI model:
+            - "openai" = "gpt-3.5-turbo"
+        See the RobotFrameworkAI docs for more information about setters.
+        """
+        logger.debug(f"Calling keyword: Set Model. Changing Model from `{self.model}` to `{model}`")
+        self.model = model
+
+    @keyword
+    def set_max_tokens(self, max_tokens: int):
+        """
+        Setter for the Max Tokens argument.
+        max_tokens: int: The token limit for a conversation. Both prompt and response tokens will count towards this limit.
+        Default = 256.
+        See the RobotFrameworkAI docs for more information about setters.
+        """
+        logger.debug(f"Calling keyword: Set Max Tokens. Changing Max Tokens from `{self.max_tokens}` to `{max_tokens}`")
+        self.max_tokens = max_tokens
+
+    @keyword
+    def set_temperature(self, temperature: float):
+        """
+        Setter for the Temperature argument.
+        temperature: float: This value determines the creativity of the AI model. Can be anything from 0-2.
+        Default = 1.
+        See the RobotFrameworkAI docs for more information about setters.
+        """
+        logger.debug(f"Calling keyword: Set Temperature. Changing Temperature from `{self.temperature}` to `{temperature}`")
+        self.temperature = temperature
+
+    @keyword
+    def set_top_p(self, top_p: float):
+        """
+        Setter for the Top P argument.
+        top_p: float: Similar to temperature. Determines the selection of tokens before selecting one.
+        The higher the value, the more less likely tokens get added to the selection. Can be anything from 0-2. At 1,
+        only the top 50% of tokens will be used when selecting a token; at 0, all tokens will be taken into consideration.
+        Default = 1.
+        See the RobotFrameworkAI docs for more information about setters.
+        """
+        logger.debug(f"Calling keyword: Set Top P. Changing Top P from `{self.top_p}` to `{top_p}`")
+        self.top_p = top_p
+
+    @keyword
+    def set_frequency_penalty(self, frequency_penalty: float):
+        """
+        Setter for the Frequency Penalty argument.
+        frequency_penalty: float: Penalizes more frequent tokens, reducing the chance of them reappearing.
+        Negative values encourage reuse of tokens. Can be anything from -2 to 2.
+        Default = 0.
+        See the RobotFrameworkAI docs for more information about setters.
+        """
+        logger.debug(f"Calling keyword: Set Frequency Penalty. Changing Frequency Penalty from `{self.frequency_penalty}` to `{frequency_penalty}`")
+        self.frequency_penalty = frequency_penalty
+
+    @keyword
+    def set_presence_penalty(self, presence_penalty: float):
+        """
+        Setter for the Presence Penalty argument.
+        presence_penalty: float: Similar to frequency_penalty but its scope is reduced to the immediate context.
+        The immediate context can be seen as one or more paragraphs about a singular subject.
+        Can be anything from -2 to 2.
+        Default = 0.
+        See the RobotFrameworkAI docs for more information about setters.
+        """
+        logger.debug(f"Calling keyword: Set Presence Penalty. Changing Presence Penalty from `{self.presence_penalty}` to `{presence_penalty}`")
+        self.presence_penalty = presence_penalty
+
+    @keyword
+    def set_response_format(self, response_format: dict):
+        """
+        Setter for the Response Format argument.
+        response_format: dict: Can be used to make the response compile to JSON.
+        Set this to { "type": "json_object" } to make the response compile to JSON or None if it shouldn't necessarily.
+        Default = None.
+        See the RobotFrameworkAI docs for more information about setters.
+        """
+        logger.debug(f"Calling keyword: Set Response Format. Changing Response Format from `{self.response_format}` to `{response_format}`")
+        self.response_format = response_format
+
+
+src/RobotFrameworkAI/modules\__init__.py
+# This is a placeholder for an empty file
+
+
+
+src/RobotFrameworkAI/modules\assistant\Assistant.py
+from robot.api.deco import keyword, library
+
+from RobotFrameworkAI.modules.Module import Module
+import logging
+
+# List of allowed file extensions for files that can be supplied 
+ALLOWED_EXTENSIONS = {
+    "c", "cpp", "css", "csv", "docx", "gif", "html", "java", "jpeg", "jpg", "js", "json", "md", "pdf", 
+    "php", "png", "pptx", "py", "rb", "tar", "tex", "ts", "txt", "webp", "xlsx", "xml", "zip"
+}
+
+logger = logging.getLogger(__name__)
+
+class Assistant(Module):
+    def __init__(self) -> None:
+        super().__init__()
+        self.name = "assistant"
+
+    def assist(self):
+        pass
+
+    
+
+
+
+src/RobotFrameworkAI/modules\chatbot\Chatbot.py
+from robot.api.deco import keyword, library
+
+from RobotFrameworkAI.modules.Module import Module
+import logging
+
+
+logger = logging.getLogger(__name__)
+
+
+@library
+class Chatbot(Module):
+    """
+    The Chatbot is a simple request response module.
+
+    You can ask questions to the Chatbot and it will give you an answer.
+    By default, messages send to an AI model wont be saved. This means that it
+    wont recall your previous messages. To have your previous messages saved,
+    set the keep_history flag to True. This will send your message along with
+    your previous message and the response to it. Setting this flag to True for
+    multiple messages in a row will keep the history for as long as it was True.
+    """
+    def __init__(self) -> None:
+        super().__init__()
+        self.name = "chatbot"
+        self.ai_tool = "text_generation"
+        # Set arguments
+        self.history = []
+        self.message = None
+        self.keep_history = False
+        self.response_format = None
+
+    @keyword
+    def generate_response(
+            self,
+            ai_model:str=None,
+            message:str=None,
+            model:str=None,
+            max_tokens:int=None,
+            temperature:float=None,
+            top_p:float=None,
+            frequency_penalty:float=None,
+            presence_penalty:float=None,
+            keep_history:bool = None,
+            response_format:dict = None
+        ):
+        """
+        Chatbot
+        =======
+
+
+        Chatbot_ is a simple response generating library for `Robot Framework`_ similar to
+        ChatGPT on the web. You can ask it a question or give it a task to have it automatically
+        reply to your emails.
+
+
+        Functionality
+        =============
+
+        The following arguments can be used (arguments with a * are required):
+        - *ai_model: str: The AI model to be used, e.g. "openai", "gemini", "copilot", etc. Currently supporting: "openai"
+        - *message: str: The message you want to send to the AI model, e.g. "What is the weather today?"
+        - model: str: AI model specfic. The model of the AI model to be used. E.g. "gpt-3.5-turbo" when using the "openai" AI model.
+            Default per AI model:
+                - "openai" = "gpt-3.5-turbo"
+        - max_tokens: int: The token limit for a conversation. Both prompt and response tokens will count towards this limit. Default = 256
+        - temperature: float: This value determines the creativity of the AI model. Can be anything from 0-2. Default = 1
+        - top_p: float: Similar to temperature. Determines the selection of tokens before selecting one.
+            The higher the value the more less likely tokens get added to the selection. Can be anything from 0-2. At 1,
+            only the top 50% of tokens will be used when selecting a token at 0 all tokens will be taken into consideration. Default = 1
+        - frequency_penalty: float: Penalizes more frequent token reducing the chance of it reappearing.
+            Negative values encourage it to reuse tokens. Can be anything from -2 to 2. Default = 0
+        - presence_penalty: float: Exact same as frequency_penalty except its scope is reduced to the immediate context.
+            The immediate context can be seen as one or more paragrahps about a singular subject.
+            Can be anything from -2 to 2. Default = 0
+        - keep_history: bool: A flag to keep the chat history of previous messages. When settings this to True, your previous prompt and
+            the response by the AI will be saved for the next message. This feature will keep the previous message, so if you want to send
+            two messages and refer to your first message from the second message, you need to set this flag to True in the second message.
+            Leaving this on for the third message aswell will keep both the first and second message. Default = False.
+
+            *NOTE:* This works by incorporating the previous messages into the prompt, this will charge you again for both the prompt and
+            response. So leaving this on, could quickly drain all your tokens.
+
+        - response_format: dict: Can be used to make the response compile to JSON.
+            Set this to { "type": "json_object" } to make the response compile to JSON or None if it shouldn't necessarily.
+            Default = { "type": "json_object" }
+
+        AI models
+        =========
+
+        Each module in the RobotFramework-AI library can support multiple different AI models. Each AI model needs an API key for the generation of test data.
+        This key gets read directly from your environment variables. Each AI model has their own API key. To define a key, create a new variable with the name of
+        the AI model capitalized followed by "_KEY". Then set this variable to your key. 
+
+        # Example API keys
+        OPENAI_KEY=278bxw4m89monwxmu89wm98ufx8hwxfhqwifmxou09qwxp09jmx
+        GEMINI_KEY=cavhjbcZCJKnvmzxcnzkcjkczckzcskjnjn7h38nwd923hdnind
+        
+
+        Setters
+        =======
+
+        Instead of providing all arguments through this keyword, it is also possible to set each argument beforehand. This way, when making repeated calls, arguments
+        do not have to be supplied each time. After setting these arguments they will remain untill set again. When arguments are set and the keyword also has arguments
+        supplied, then the supplied arguments will take priority.
+
+        NOTE: Setting arguments will impact other modules aswell. This means that when setting the temperature to 2 that both the RealTestDataGenerator and the Chatbot
+        will use this temperature from then on. This is only the case when both modules share arguments, the arguments that are shared are as followed: ai_model,
+        model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format.
+
+        Each argument has its own setter, the name of the keyword is 'set' plus the name of the argument e.g. Set AI Model for AI Model.
+        """        
+        
+        logger.debug(f"Calling keyword: Generate Response with arguments: (ai_model: {ai_model}), (message: {message}), (model: {model}), (max_tokens: {max_tokens}), (temperature: {temperature}), (top_p: {top_p}), (frequency_penalty: {frequency_penalty}), (presence_penalty: {presence_penalty}), (keep_history: {keep_history}), (response_format: {response_format})")
+        # Set defaut values for arguments
+        argument_values = self.get_default_values_for_common_arguments(
+            ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format
+        )
+        ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format = argument_values
+
+        message, keep_history = self.get_default_values_for_chatbot_specifc_arguments(message, keep_history)
+
+        try:
+            if ai_model is None or message is None:
+                raise ValueError(f"Both ai_model and message are required and can't be None. AI model: `{ai_model}`, Message: `{message}`")
+        except Exception as e:
+            logger.error(e)
+            raise
+        
+        self.validate_common_input_arguments(max_tokens, temperature, top_p, frequency_penalty, presence_penalty)
+        message = self.create_message(message, keep_history)
+        prompt = self.create_prompt(
+            self.ai_tool,
+            ai_model,
+            message,
+            model,
+            max_tokens,
+            temperature,
+            top_p,
+            frequency_penalty,
+            presence_penalty,
+            response_format           
+        )
+        response = self.ai_interface.send_prompt(prompt)
+        self.set_history(prompt, response, keep_history)
+        return response.message
+
+    def get_default_values_for_chatbot_specifc_arguments(self, message:str, keep_history:bool):        
+        message = message if message is not None else self.message
+        keep_history = keep_history if keep_history is not None else self.keep_history
+        return message, keep_history
+
+    def create_message(self, message:str, keep_history:bool):
+        if keep_history:
+            return self.history + [{"role": "user", "content": message}]
+        return [{"role": "user", "content": message}]
+    
+    def set_history(self, prompt:object, response:object, keep_history:bool):
+        if not keep_history:
+            self.history = []
+        self.history += prompt.message + [{"role": "assistant", "content": response.message}]
+
+    # Setters
+    @keyword
+    def set_message(self, message: str):
+        """
+        Setter for the Message argument.
+        message: str: The message you want to send to the AI model, e.g., "What is the weather today?".
+        See the RobotFrameworkAI docs for more information about setters.
+        """
+        logger.debug(f"Calling keyword: Set Message. Changing Message from `{self.message}` to `{message}`")
+        self.message = message
+
+    @keyword
+    def set_keep_history(self, keep_history: bool):
+        """
+        Setter for the Keep History argument.
+        keep_history: bool: A flag to keep the chat history of previous messages. When setting this to True, your previous prompt and
+        the response by the AI will be saved for the next message. This feature will keep the previous message, so if you want to send
+        two messages and refer to your first message from the second message, you need to set this flag to True in the second message.
+        Leaving this on for the third message as well will keep both the first and second messages. Default = False.
+        
+        NOTE: This works by incorporating the previous messages into the prompt, this will charge you again for both the prompt and
+        response. So leaving this on could quickly drain all your tokens.
+        See the RobotFrameworkAI docs for more information about setters.
+        """
+        logger.debug(f"Calling keyword: Set Keep History. Changing Keep History from `{self.keep_history}` to `{keep_history}`")
+        self.keep_history = keep_history
+
+
+src/RobotFrameworkAI/modules\chatbot\__init__.py
+# This is a placeholder for an empty file
+
+
+
+src/RobotFrameworkAI/modules\real_test_data_generator\RealTestDataGenerator.py
+from robot.api.deco import keyword, library
+
+from RobotFrameworkAI.modules.Module import Module
+from RobotFrameworkAI.modules.real_test_data_generator.test_data_generators.AddressGenerator import AddressGenerator
+from RobotFrameworkAI.modules.real_test_data_generator.test_data_generators.UserDataGenerator import UserDataGenerator
+import logging
+
+
+logger = logging.getLogger(__name__)
+
+
+@library
+class RealTestDataGenerator(Module):
+    """
+    The RealTestDataGenerator is a module that generates real test data.
+
+    The test data is real in the sense that it can or could (depending on the type of test data)
+    exist in the real world. In the case of addresses, the generated addresses should exists, and
+    thus should be findable on for example Google maps.
+
+    The aim om this module is to overcome the issues the library Faker has.
+    So if Faker can already generate has no issues generating email addresses, then the
+    RealTestDataGenerator wont implement this logic.
+    """
+    def __init__(self) -> None:
+        super().__init__()
+        self.name = "real_test_data_generator"
+        self.generators = {
+            "address": AddressGenerator(),
+            "user_data": UserDataGenerator(),
+        }
+        self.ai_tool = "text_generation"
+        # Set arguments
+        self.type = None
+        self.amount = 3
+        self.format = None
+        self.response_format = None
+        self.kwargs = {}
+
+    @keyword
+    def generate_test_data(
+            self,
+            ai_model:str=None,
+            type:str=None,
+            model:str=None,
+            amount:int=None,
+            format:str=None,
+            max_tokens:int=None,
+            temperature:float=None,
+            top_p:float=None,
+            frequency_penalty:float=None,
+            presence_penalty:float=None,
+            response_format:dict=None,
+            **kwargs
+        ):
+        """
+        RealTestDataGenerator
+        =====================
+
+        RealTestDataGenerator can generate test data for the Robot Framework similar to
+        the library Faker. The RealTestDataGenerator however generates real existing data, using AI.
+
+        To generate test data simply import the package and use the keyword: Generate Test Data
+        This keyword takes various arguments, some being specific for the generation of certain
+        types of test data.
+
+        The following arguments can be used (arguments in bold are required):
+        - *ai_model:str: The AI model to be used, e.g. "openai", "gemini", "copilot", etc. Currently supporting: "openai"
+        - *type:str: The type of test data to create, e.g. "address", "user_data", etc. Currently supporting: "address"
+        - amount:int: The amount of rows of test data to generate. Default = 3
+        - format:str: The format in which the test data will be given. If None, will return a 2 dimensional list. Default = None
+        - max_tokens:int: The token limit for a conversation. Both prompt and response tokens will count towards this limit. Default = 256
+        - model:str: AI model specfic. The model of the AI model to be used. E.g. "gpt-3.5-turbo" when using the "openai" AI model.
+            Default per AI model:
+                - "openai" = "gpt-3.5-turbo"
+        - temperature:float: This value determines the creativity of the AI model. Can be anything from 0-2. Default = 1
+        - top_p:float: Similar to temperature. Determines the selection of tokens before selecting one.
+            The higher the value the more less common tokens get added to the selection. Can be anything from 0-2. Default = 1
+        - frequency_penalty:float: Penalizes more frequent token reducing the chance of it reappearing.
+            Negative values encourage it to reuse tokens. Can be anything from -2 to 2. Default = 0
+        - presence_penalty:float: Exact same as frequency_penalty except its scope is reduced to the immediate context.
+            Can be anything from -2 to 2. Default = 0
+        - kwargs:dict: Additional arguments can be supplied for specific types of test data. These will be explained in per type below
+
+        Required arguments can also be set using setters.
+
+        Addresses
+        ---------
+
+        When generating addresses additional argument are available. These arguments are as follows:
+        - Country:str: The country from which to create addresses. If None, will generate an address from anywhere. Default = None
+
+
+        AI models
+        =========
+
+        Each module in the RobotFramework-AI library can support multiple different AI models. Each AI model needs an API key for the generation of test data.
+        This key gets read directly from your environment variables. Each AI model has their own API key. To define a key, create a new variable with the name of
+        the AI model capitalized followed by "_KEY". Then set this variable to your key. 
+
+        # Example API keys
+        OPENAI_KEY=278bxw4m89monwxmu89wm98ufx8hwxfhqwifmxou09qwxp09jmx
+        GEMINI_KEY=cavhjbcZCJKnvmzxcnzkcjkczckzcskjnjn7h38nwd923hdnind
+        
+
+        Setters
+        =======
+
+        Instead of providing all arguments through this keyword, it is also possible to set each argument beforehand. This way, when making repeated calls, arguments
+        do not have to be supplied each time. After setting these arguments they will remain untill set again. When arguments are set and the keyword also has arguments
+        supplied, then the supplied arguments will take priority.
+
+        NOTE: Setting arguments will impact other modules aswell. This means that when setting the temperature to 2 that both the RealTestDataGenerator and the Chatbot
+        will use this temperature from then on. This is only the case when both modules share arguments, the arguments that are shared are as followed: ai_model,
+        model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format.
+
+        Each argument has its own setter, the name of the keyword is 'set' plus the name of the argument e.g. Set AI Model for AI Model.
+        """        
+        logger.debug(f"Calling keyword: Generate Test Data with arguments: (ai_model: {ai_model}), (type: {type}), (model: {model}), (amount: {amount}), (format: {format}), (max_tokens: {max_tokens}), (temperature: {temperature}), (top_p: {top_p}), (frequency_penalty: {frequency_penalty}), (presence_penalty: {presence_penalty}), (response_format: {response_format}), (kwargs: {kwargs})")
+        # Set defaut values for arguments
+        argument_values = self.get_default_values_for_common_arguments(
+            ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format
+        )
+        ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format = argument_values
+        response_format = {"type": "json_object"}
+        type, amount, format, kwargs = self.get_default_values_for_real_test_data_generator_specifc_arguments(type, amount, format, kwargs)
+
+        try:
+            if ai_model is None or type is None:
+                raise ValueError(f"Both ai_model and type are required and can't be None. AI model: `{ai_model}`, Type: `{type}`")
+        except Exception as e:
+            logger.error(e)
+            raise
+
+        self.validate_common_input_arguments(max_tokens, temperature, top_p, frequency_penalty, presence_penalty)
+        self.validate_module_specific_arguments(type)
+        generator = self.generators[type]
+        message = generator.create_prompt_message(amount, format, kwargs)
+        prompt = self.create_prompt(
+            self.ai_tool,
+            ai_model,
+            message,
+            model,
+            max_tokens,
+            temperature,
+            top_p,
+            frequency_penalty,
+            presence_penalty,
+            response_format
+        )
+        response = self.ai_interface.call_ai_tool(prompt)
+        response = generator.format_response(response)
+        return response
+
+    def get_default_values_for_real_test_data_generator_specifc_arguments(self, type:str, amount:int, format:str, kwargs:dict):
+        type = type if type is not None else self.type
+        amount = amount if amount is not None else self.amount
+        format = format if format is not None else self.format
+
+        # Do the same but for kwargs arguments
+        for key, value in self.kwargs.items():
+            if key not in kwargs and value is not None:
+                kwargs[key] = value
+        return type, amount, format, kwargs
+
+    def validate_module_specific_arguments(self, type:str):
+        error_messages = []        
+        if not self.is_valid_type(type):
+            error_messages.append(f"Invalid value '{type}' for 'type'. Value must be in: {', '.join(self.generators.keys())}.")
+        try:
+            if error_messages:
+                raise ValueError(f"Invalid input argument(s): {' '.join(error_messages)}")
+        except Exception as e:
+            logger.error(e)
+            raise
+        return True
+
+    def is_valid_type(self, type:str):
+        return type in self.generators
+    
+    # Setters
+    @keyword
+    def set_type(self, type: str):
+        """
+        Setter for the Type argument.
+        type: str: The type of test data to create, e.g., "address", "user_data", etc. Currently supporting: "address".
+        See the RobotFrameworkAI docs for more information about setters.
+        """
+        logger.debug(f"Calling keyword: Set Type. Changing Type from `{self.type}` to `{type}`")
+        self.type = type
+
+    @keyword
+    def set_amount(self, amount: int):
+        """
+        Setter for the Amount argument.
+        amount: int: The amount of rows of test data to generate.
+        Default = 3.
+        See the RobotFrameworkAI docs for more information about setters.
+        """
+        logger.debug(f"Calling keyword: Set Amount. Changing Amount from `{self.amount}` to `{amount}`")
+        self.amount = amount
+
+    @keyword
+    def set_format(self, format: str):
+        """
+        Setter for the Format argument.
+        format: str: The format in which the test data will be given. If None, will return a 2-dimensional list.
+        Default = None.
+        See the RobotFrameworkAI docs for more information about setters.
+        """
+        logger.debug(f"Calling keyword: Set Format. Changing Format from `{self.format}` to `{format}`")
+        self.format = format
+
+    @keyword
+    def set_kwarg(self, argument, value):
+        """
+        Setter for Kwarg arguments. 
+        Give the name of the kwarg argument and the value you want to set it to. 
+        E.g., Set Kwarg    country    Czechia. 
+        Set to None to unset it.
+        See the RobotFrameworkAI docs for more information about setters.
+        """
+        logger.debug(f"Calling keyword: Set Kwarg. Changing Kwarg `{argument}` to `{value}`")
+        self.kwargs[argument] = value
+
+
+src/RobotFrameworkAI/modules\real_test_data_generator\__init__.py
+# This is a placeholder for an empty file
+
+
+
+src/RobotFrameworkAI/modules\real_test_data_generator\test_data_generators\AddressGenerator.py
+import json
+from RobotFrameworkAI.modules.real_test_data_generator.test_data_generators.TestDataGenerator import TestDataGenerator
+import logging
+
+
+logger = logging.getLogger(__name__)
+
+
+class AddressGenerator(TestDataGenerator):
+    """
+    The TestDataGenerator in charge of generating addresses.
+
+    This TestDataGenerator creates the request for the AI model to generate address.
+    It also takes the test data out of the Response and turns it to a list of addresses. 
+    """
+    def __init__(self) -> None:
+        super().__init__()
+        self.name = "address"
+
+    def create_prompt_message(self, amount:int, format:str, address_kwargs:dict):
+        system_message = """
+            You generate a list of just addresses nothing else not the company name, in json.
+            Call the list 'addresses' and each list item is a dictionary with the key 'address', don't use any newline characters
+        """
+        country = address_kwargs.get("country", None)
+        system_message += f", in the format: {format}" if format is not None else ""
+        country_message = country if country is not None else "different countries around the world"
+        user_message = f"Give me a list {amount} different companies from {country_message} and the address of their HQ"
+        return self.create_message(system_message, user_message)
+
+    def format_response(self, response):
+        response = response.message
+        try:
+            addresses = json.loads(response)
+        except json.JSONDecodeError as e:
+            error = f"The response couldn't be parsed to JSON. Response: {response}. Error {e}"
+            logger.error(error)
+            raise
+        return [address["address"] for address in addresses["addresses"]]
+
+
+src/RobotFrameworkAI/modules\real_test_data_generator\test_data_generators\TestDataGenerator.py
+
+class TestDataGenerator:
+    """
+    The interface for all TestDataGenerators
+
+    The RealTestDataGenerator use TestDataGenerator's to generate the test data.
+    Each TestDataGenerator is in charge of creating a system and a user message, this is the actual question
+    sent to the ai. This will go to the AI model and eventually a Response object will be returned.
+    Each TestDataGenerator should take the usefull information out of the Response and return it in a way
+    that is most usefull to the user.
+
+    As of now, the only TestDataGenerator is the AddressGenerator, this can be expanded on.
+    There is also a UserDataGenerator although that is for now just an example of an implementation.
+
+    To create new types of test data generators, create a new class in the test_data_generators folder.
+    Have that class inherit the TestDataGenerator interface and implement the methods: create_prompt_message
+    and format_response. The create_prompt_message method should create a system message and a user message,
+    supply those to the create_message method and return its result. The format_response takes the Response,
+    extract the message from the AI model and format it in a way that is most usefull to the user.
+
+    Adding an object of this class to the generators in the RealTestDataGenerator class will allow you to
+    to use that test data generator for the generation of data.
+    """
+    def __init__(self) -> None:
+        pass
+
+    def create_prompt_message(self, amount, format):
+        pass
+
+    def format_response(self, response):
+        pass
+    
+    def create_message(self, system_message:str, user_message:str):
+        return [
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": user_message}
+        ]
+
+
+
+src/RobotFrameworkAI/modules\real_test_data_generator\test_data_generators\UserDataGenerator.py
+from RobotFrameworkAI.modules.real_test_data_generator.test_data_generators.TestDataGenerator import TestDataGenerator
+
+
+class UserDataGenerator(TestDataGenerator):
+    """
+    THIS CLASS IS JUST AN EXAMPLE FOR NOW AND SHOULD/CAN NOT BE USED AS IT DOES NOTHING
+
+    The TestDataGenerator in charge of generating user data.
+    """
+    def __init__(self) -> None:
+        super().__init__()
+
+    def create_prompt_message(self, amount, format):
+        pass
+
+    def format_response(self):
+        pass
+
+
+
+src/RobotFrameworkAI/modules\real_test_data_generator\test_data_generators\__init__.py
+# This is a placeholder for an empty file
+
+
+
+src/RobotFrameworkAI/objects\__init__.py
+# This is a placeholder for an empty file
+
+
+
+src/RobotFrameworkAI/objects\prompt\Prompt.py
+from RobotFrameworkAI.objects.prompt.PromptConfig import PromptConfig
+from RobotFrameworkAI.objects.prompt import PromptMetadata
+from RobotFrameworkAI.objects.prompt.ai_tool_data.AIToolData import AIToolData
+
+
+class Prompt:
+    """
+    The object that holds all information needed to generate a response from an AI model.
+
+    Prompt object are used as a standardized way of communication between modules and AI models.
+    Each module creates a Prompt and sends it to the AI_Interface. The AI_Interface will then send it to
+    the appropriate AIModelStrategy, which in turn unpacks this object and sends the data to the AI model.
+
+    It has a config, which contains the information about what AI model and model to use and how to format the response.
+    The message is a list containing dictionaries which contain the messages that will be sent to the AI model.
+    Parameters is a dictionary with parameters that control how the AI model generates data.
+    The metadata is an object that contains information about the Prompt itself, this can be used for logging.
+    """
+    def __init__(self, config:PromptConfig, message:list, parameters:dict, metadata:PromptMetadata, ai_tool_data: AIToolData) -> None:
+        self.config = config
+        self.message = message
+        self.parameters = parameters
+        self.metadata = metadata
+        self.ai_tool_data = ai_tool_data
+
+    def __str__(self):
+        parameters_str = ', '.join([f"({key}: {value})" for key, value in self.parameters.items()])
+        return f"Prompt: {self.config}, (Message: {self.message}), {parameters_str}, {self.metadata}, {self.ai_tool_data}"
+
+
+
+src/RobotFrameworkAI/objects\prompt\PromptConfig.py
+class PromptConfig:
+    """
+    This object contains the configuration data for the Prommpt.
+
+    It contains the information about what AI model and model to use and how to format the response.
+    """
+    def __init__(self, ai_tool, ai_model:str, model:str, response_format:dict, **kwargs) -> None:
+        self.ai_tool = ai_tool
+        self.ai_model = ai_model
+        self.model = model
+        self.response_format = response_format
+        self.kwargs = kwargs
+
+    def __str__(self):
+        additional_args = ', '.join([f"({key}: {value})" for key, value in self.kwargs.items()])
+        return f"(AI Tool: {self.ai_tool}), (AI Model: {self.ai_model}), (Model: {self.model}), (Response Format: {self.response_format})" + (f", {additional_args}" if additional_args else "")
+
+
+
+src/RobotFrameworkAI/objects\prompt\PromptMetadata.py
+import time
+
+
+class PromptMetadata:
+    """
+    An object containing the metadata for the Prompt.
+
+    It contains data about what module created the Prompt and at what time it was created. 
+    """
+    def __init__(self, module: str, **kwargs) -> None:
+        self.module = module
+        self.time = int(time.time())    # Current time in unix
+        self.kwargs = kwargs
+
+    def __str__(self):
+        additional_args = ', '.join([f"({key}: {value})" for key, value in self.kwargs.items()])
+        return f"(Module: {self.module}), (Time: {self.time})" + (f", {additional_args}" if additional_args else "")
+
+
+
+src/RobotFrameworkAI/objects\prompt\__init__.py
+# This is a placeholder for an empty file
+
+
+
+src/RobotFrameworkAI/objects\prompt\ai_tool_data\AIToolData.py
+class AIToolData:
+    def __init__(self) -> None:
+        pass
+
+
+src/RobotFrameworkAI/objects\prompt\ai_tool_data\AssistantData.py
+from RobotFrameworkAI.objects.prompt.ai_tool_data.AIToolData import AIToolData
+
+
+class AssistantData(AIToolData):
+    def __init__(self, folder_path, generate_new_assistant) -> None:
+        super().__init__()
+        self.folder_path = folder_path
+        self.generate_new_assistant = generate_new_assistant
+
+
+src/RobotFrameworkAI/objects\response\Response.py
+from RobotFrameworkAI.objects.response.ResponseMetadata import ResponseMetadata
+
+
+class Response:
+    """
+    The object that holds all information needed from a response from an AI model.
+
+    Response object are used as a standardized way of communication between modules and AI models.
+    Each AIModelStrategy creates a Response and sends it to the AI_Interface. The AI_Interface will then send it
+    back to the appropriate module, which in turn unpacks this object and sends the data to the user.
+
+    A Response contains a message with the response of the AI model.
+    The metadata is an object that contains information about the Response itself, this can be used for logging.
+    
+    """
+    def __init__(self, message:str, metadata:ResponseMetadata) -> None:
+        self.message = message
+        self.metadata = metadata
+
+    def __str__(self):
+        return f"Response: (Message: {self.message}), {self.metadata}"
+    
+
+
+src/RobotFrameworkAI/objects\response\ResponseMetadata.py
+class ResponseMetadata:
+    """
+    An object containing the metadata for the Response.
+
+    It contains data about:
+    The AI model that created the Response.
+    The model of the AI model.
+    The reason why the AI model finished the Response.
+    The amount of tokens used in the prompt.
+    The amount of tokens used in the response.
+    The time of completion. 
+    """
+    def __init__(self, ai_tool:str, ai_model: str, model: str, finish_reason: str, prompt_tokens: int, completion_tokens: int, time: int, **kwargs) -> None:
+        self.ai_tool = ai_tool
+        self.ai_model = ai_model
+        self.model = model
+        self.finish_reason = finish_reason
+        self.prompt_tokens = prompt_tokens
+        self.completion_tokens = completion_tokens
+        self.time = time
+        self.kwargs = kwargs
+
+
+    def __str__(self):
+        additional_args = ', '.join([f"({key}: {value})" for key, value in self.kwargs.items()])
+        return f"(AI Tool: {self.ai_tool}), (AI Model: {self.ai_model}), (Model: {self.model}), (Finish Reason: {self.finish_reason}), (Prompt Tokens: {self.prompt_tokens}), (Completion Tokens: {self.completion_tokens}), (Time: {self.time})" + (f", {additional_args}" if additional_args else "")
+
+
+src/RobotFrameworkAI/objects\response\__init__.py
+# This is a placeholder for an empty file
+
+
+

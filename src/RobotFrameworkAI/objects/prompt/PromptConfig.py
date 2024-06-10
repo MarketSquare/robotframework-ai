@@ -4,7 +4,8 @@ class PromptConfig:
 
     It contains the information about what AI model and model to use and how to format the response.
     """
-    def __init__(self, ai_model:str, model:str, response_format:dict, **kwargs) -> None:
+    def __init__(self, ai_tool, ai_model:str, model:str, response_format:dict, **kwargs) -> None:
+        self.ai_tool = ai_tool
         self.ai_model = ai_model
         self.model = model
         self.response_format = response_format
@@ -12,4 +13,4 @@ class PromptConfig:
 
     def __str__(self):
         additional_args = ', '.join([f"({key}: {value})" for key, value in self.kwargs.items()])
-        return f"(AI Model: {self.ai_model}), (Model: {self.model}), (Response Format: {self.response_format})" + (f", {additional_args}" if additional_args else "")
+        return f"(AI Tool: {self.ai_tool}), (AI Model: {self.ai_model}), (Model: {self.model}), (Response Format: {self.response_format})" + (f", {additional_args}" if additional_args else "")

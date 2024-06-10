@@ -22,6 +22,8 @@ class Chatbot(Module):
     def __init__(self) -> None:
         super().__init__()
         self.name = "chatbot"
+        self.ai_tool = "text_generation"
+        # Set arguments
         self.history = []
         self.message = None
         self.keep_history = False
@@ -92,7 +94,7 @@ class Chatbot(Module):
         # Example API keys
         OPENAI_KEY=278bxw4m89monwxmu89wm98ufx8hwxfhqwifmxou09qwxp09jmx
         GEMINI_KEY=cavhjbcZCJKnvmzxcnzkcjkczckzcskjnjn7h38nwd923hdnind
-        
+
 
         Setters
         =======
@@ -107,10 +109,10 @@ class Chatbot(Module):
 
         Each argument has its own setter, the name of the keyword is 'set' plus the name of the argument e.g. Set AI Model for AI Model.
         """        
-        
+
         logger.debug(f"Calling keyword: Generate Response with arguments: (ai_model: {ai_model}), (message: {message}), (model: {model}), (max_tokens: {max_tokens}), (temperature: {temperature}), (top_p: {top_p}), (frequency_penalty: {frequency_penalty}), (presence_penalty: {presence_penalty}), (keep_history: {keep_history}), (response_format: {response_format})")
         # Set defaut values for arguments
-        argument_values = self.get_default_values_for_common_arguments(
+        argument_values = self.get_default_values_for_common_arguments_for_text_generators(
             ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format
         )
         ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format = argument_values
@@ -127,6 +129,7 @@ class Chatbot(Module):
         self.validate_common_input_arguments(max_tokens, temperature, top_p, frequency_penalty, presence_penalty)
         message = self.create_message(message, keep_history)
         prompt = self.create_prompt(
+            self.ai_tool,
             ai_model,
             message,
             model,
@@ -137,7 +140,7 @@ class Chatbot(Module):
             presence_penalty,
             response_format           
         )
-        response = self.ai_interface.send_prompt(prompt)
+        response = self.ai_interface.call_ai_tool(prompt)
         self.set_history(prompt, response, keep_history)
         return response.message
 

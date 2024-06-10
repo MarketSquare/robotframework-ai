@@ -1,5 +1,6 @@
 from RobotFrameworkAI.objects.prompt.PromptConfig import PromptConfig
 from RobotFrameworkAI.objects.prompt import PromptMetadata
+from RobotFrameworkAI.objects.prompt.ai_tool_data.AIToolData import AIToolData
 
 
 class Prompt:
@@ -15,12 +16,13 @@ class Prompt:
     Parameters is a dictionary with parameters that control how the AI model generates data.
     The metadata is an object that contains information about the Prompt itself, this can be used for logging.
     """
-    def __init__(self, config:PromptConfig, message:list, parameters:dict, metadata:PromptMetadata) -> None:
+    def __init__(self, config:PromptConfig, message:list, parameters:dict, metadata:PromptMetadata, ai_tool_data: AIToolData) -> None:
         self.config = config
         self.message = message
         self.parameters = parameters
         self.metadata = metadata
+        self.ai_tool_data = ai_tool_data
 
     def __str__(self):
         parameters_str = ', '.join([f"({key}: {value})" for key, value in self.parameters.items()])
-        return f"Prompt: {self.config}, (Message: {self.message}), {parameters_str}, {self.metadata}"
+        return f"Prompt: {self.config}, (Message: {self.message}), {parameters_str}, {self.metadata}, {self.ai_tool_data}"

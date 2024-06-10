@@ -6,6 +6,13 @@ from RobotFrameworkAI.objects.response.Response import Response
 from RobotFrameworkAI.objects.response.ResponseMetadata import ResponseMetadata
 import logging
 
+from RobotFrameworkAI.ai_interface.ai_model_services.openai_tools.OpenAITool import OpenAITool
+
+# List of allowed file extensions
+ALLOWED_EXTENSIONS = {
+    "c", "cpp", "css", "csv", "docx", "gif", "html", "java", "jpeg", "jpg", "js", "json", "md", "pdf", 
+    "php", "png", "pptx", "py", "rb", "tar", "tex", "ts", "txt", "webp", "xlsx", "xml", "zip"
+}
 
 logger = logging.getLogger(__name__)
 
@@ -19,47 +26,28 @@ class OpenAIService(AIModelStrategy):
     def __init__(self) -> None:
         super().__init__()
         self.name = "openai"
-        key = os.environ["OPENAI_KEY"]
-        self.ai_model = OpenAI(api_key=key)
-        self.default_model = "gpt-3.5-turbo"
+        client = OpenAI(api_key=os.environ["OPENAI_KEY"])
+        self.ai_tools = self._discover_tools("openai_tools", OpenAITool, client)
 
-    def send_prompt(self, prompt):
-        model = prompt.config.model
-        if prompt.config.model is None:
-            model = self.default_model
-        self.validate_prompt(model)
-        arguments = prompt.parameters
-        chat_completion = self.ai_model.chat.completions.create(
-            model = model,
-            messages = prompt.message,
-            response_format= prompt.config.response_format,
-            max_tokens = arguments["max_tokens"],
-            temperature = arguments["temperature"],
-            top_p = arguments["top_p"],
-            frequency_penalty = arguments["frequency_penalty"],
-            presence_penalty = arguments["presence_penalty"]
-        )
-        logger.debug(f"OpenAI chat completion: {chat_completion}")
-        metadata = ResponseMetadata(
-            self.name,
-            model,
-            chat_completion.choices[0].finish_reason,
-            chat_completion.usage.prompt_tokens,
-            chat_completion.usage.completion_tokens,
-            chat_completion.created
-        )
-        response = Response(
-            chat_completion.choices[0].message.content,
-            metadata
-        )
-        return response
-    
-    def validate_prompt(self, model:str):
-        models = ["gpt-3.5-turbo"]
-        try:
-            if model not in models:
-                raise ValueError(f"Invalid model: `{model}`. Valid models are: `{'`, `'.join(models)}`")
-        except Exception as e:
-            logger.error(e)
-            raise
-        return True
+
+    # def
+
+    # def assist():
+    #     pass
+
+    # def create_assistant(self):
+    #     assistant = self.ai_model.beta.assistants.create(
+    #         name="Test error explainer",
+    #         instructions="""When a Robot Framework test fails, you get called and read there code.
+    #         Based on the code you explain why the test fails or give an error.
+    #         You then also give suggestion on how to improve said code so the test succeeds""",
+    #         model="gpt-3.5-turbo",
+    #         tools=[{"type": "file_search"}],
+    #     )
+    #     return assistant
+
+    # def collect_files():
+    #     pass
+
+    # def add_files(self):
+    #     self.ai_model.beta.vector_stores.create(name="Code")
