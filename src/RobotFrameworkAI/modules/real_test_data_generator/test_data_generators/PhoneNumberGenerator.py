@@ -38,4 +38,4 @@ class PhoneNumberGenerator(TestDataGenerator):
             error = f"The response couldn't be parsed to JSON. Response: {response}. Error {e}"
             logger.error(error)
             raise
-        return [phone_number["phone_number"] for phone_number in phone_numbers["addresses"]]
+        return [phone_number["phone_number"] for phone_number in phone_numbers["phone_numbers"]]
