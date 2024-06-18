@@ -1,5 +1,7 @@
 # NOTES
-# Solve why the TestDataGenerator cannot find user message - prolly smth with import of modules
+# Add KWARGS
+# When letting all countries, the output formats are different
+# Add smth when the country argument is something stupid - IF clause to shut it down? or take closest country?
 
 # IMPORTS
 import json
@@ -26,9 +28,15 @@ class PhoneNumberGenerator(TestDataGenerator):
         """
         country = phone_number_kwargs.get("country", None)
         country_message = country if country is not None else "different countries around the world"
+
+        # prefix_type = phone_number_kwargs.get("prefix", None)
+        # prefix_type_message = prefix_type if prefix_type is not None else "international: +xxx"
+
         system_message += f", phone number format is {format}" if format is not None else ""
-        user_message = f"Give me a list of {amount} different phone numbers from {country_message} in the same format"
-        return self.create_message(system_message, user_message) #CANNOT FIND USER MESSAGE - SOLVING
+        user_message = f"Give me a list of {amount} different phone numbers from {country_message} in the same format."
+        
+        # Use the same format for all phone numbers regarding numbers, all the special signs (such as '-') and the spaces.
+        return self.create_message(system_message, user_message)
 
     def format_response(self, response):
         response = response.message

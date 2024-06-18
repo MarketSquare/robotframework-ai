@@ -10,8 +10,10 @@ def real_test_data_generator():
     generator = RTDG()
     generator.set_ai_model("openai")
     generator.set_type("phone_number")
-    generator.set_amount(3)
-    generator.set_kwarg("country", "czech republic")
+    generator.set_amount(5)
+    generator.set_format("00123456789")
+    generator.set_kwarg("country", "czechia")
+    # generator.set_kwarg("prefix", "00")
     response = generator.generate_test_data()
     print("\n\n\n", response, "\n\n\n")
 
@@ -38,7 +40,7 @@ def pytests():
 if __name__ == "__main__":
     setup_logging(enabled=True, for_tests=False, console_logging=False ,file_logging=True)
     
-    # real_test_data_generator()
+    real_test_data_generator()
     # chatbot()
     # robot_tests()
     # pytests()
