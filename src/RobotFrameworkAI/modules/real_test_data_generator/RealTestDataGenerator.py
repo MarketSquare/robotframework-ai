@@ -128,7 +128,7 @@ class RealTestDataGenerator(Module):
             logger.error(error_message)
             raise ValueError(error_message)
 
-        self.validate_common_input_arguments(max_tokens, temperature, top_p, frequency_penalty, presence_penalty)
+        self.validate_common_input_arguments(temperature, top_p, frequency_penalty, presence_penalty)
         self.validate_module_specific_arguments(type)
         generator = self.generators[type]
         message = generator.create_prompt_message(amount, format, kwargs)

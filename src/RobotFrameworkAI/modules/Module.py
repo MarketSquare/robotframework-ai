@@ -102,10 +102,8 @@ class Module:
         response_format = response_format if response_format is not None else self.response_format
         return ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format
 
-    def validate_common_input_arguments(self, max_tokens:int, temperature:float, top_p:float, frequency_penalty:float, presence_penalty:float):
+    def validate_common_input_arguments(self, temperature:float, top_p:float, frequency_penalty:float, presence_penalty:float):
         error_messages = []
-        if not self.is_valid_max_tokens(max_tokens):
-            error_messages.append(f"Invalid value `{max_tokens}` for `max_tokens`. Value must be greater than 0 and less than or equal to 4096.")
         if not self.is_valid_temperature(temperature):
             error_messages.append(f"Invalid value `{temperature}` for `temperature`. Value must be between 0 and 2 (inclusive).")
         if not self.is_valid_top_p(top_p):
@@ -120,9 +118,7 @@ class Module:
             logger.error(error_message)
             raise ValueError(error_message)
         return True
-    
-    def is_valid_max_tokens(self, max_tokens:int):
-        return 0 < max_tokens <= 4096
+
     def is_valid_temperature(self, temperature:float):
         return 0 <= temperature <= 2
     def is_valid_top_p(self, top_p:float):

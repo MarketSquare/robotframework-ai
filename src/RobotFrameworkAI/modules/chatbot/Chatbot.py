@@ -122,7 +122,7 @@ class Chatbot(Module):
             logger.error(error_message)
             raise ValueError(error_message)
         
-        self.validate_common_input_arguments(max_tokens, temperature, top_p, frequency_penalty, presence_penalty)
+        self.validate_common_input_arguments(temperature, top_p, frequency_penalty, presence_penalty)
         message = self.create_message(message, keep_history)
         prompt = self.create_prompt(
             ai_model,
