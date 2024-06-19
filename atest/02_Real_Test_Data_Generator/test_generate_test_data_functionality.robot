@@ -6,7 +6,7 @@ Library    ../../src/RobotFrameworkAI/modules/real_test_data_generator/RealTestD
 
 *** Variables ***
 ${AI_MODEL}            openai
-${TYPE}                address
+${TYPE}                phone_number
 ${MODEL}               gpt-3.5-turbo
 ${AMOUNT}              3
 ${FORMAT}              "{'addresses':[{'address': address}]}"
