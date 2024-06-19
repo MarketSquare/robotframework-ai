@@ -27,7 +27,7 @@ class PhoneNumberGenerator(TestDataGenerator):
         Call the list 'phone_numbers' and each list item is a dictionary with the key 'phone_number', don't use any newline characters
         """
         # Get kwargs
-        prefix = phone_number_kwargs.get("prefix") if prefix is not None else "International: +xxx"
+        prefix = phone_number_kwargs.get("prefix") if phone_number_kwargs.get("prefix") is not None else "International: +xxx"
         format = phone_number_kwargs.get("format", None)
         country = phone_number_kwargs.get("country", None)
         mix_format = True if phone_number_kwargs.get("mix_format") == "True" else False
