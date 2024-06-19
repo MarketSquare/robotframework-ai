@@ -13,10 +13,10 @@ def real_test_data_generator():
     generator.set_amount(5)
     # generator.set_format("")
 
-    # generator.set_kwarg("prefix", "00")
+    generator.set_kwarg("prefix", "00")
     # generator.set_kwarg("format", "+xxx-xxx-xxx-xxx")
     generator.set_kwarg("country", "czechia")
-    generator.set_kwarg("mix_format", "True")
+    # generator.set_kwarg("mix_format", "True")
 
     response = generator.generate_test_data()
     print("\n\n\n", response, "\n\n\n")

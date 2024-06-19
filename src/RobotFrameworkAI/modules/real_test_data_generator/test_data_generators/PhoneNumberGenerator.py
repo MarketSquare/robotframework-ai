@@ -1,6 +1,4 @@
 # NOTES
-# Add KWARGS
-# When letting all countries, the output formats are different
 # Add smth when the country argument is something stupid - IF clause to shut it down? or take closest country?
 
 # IMPORTS
@@ -24,7 +22,7 @@ class PhoneNumberGenerator(TestDataGenerator):
     def create_prompt_message(self, amount:int, format:str, phone_number_kwargs:dict):
         system_message = """
         You generate list of just phone numbers, nothing else, in json
-        Call the list 'phone_numbers' and each list item is a dictionary with the key 'phone_number', don't use any newline characters, print only the quantity of digits in phone number that is correct in reality
+        Call the list 'phone_numbers' and each list item is a dictionary with the key 'phone_number', don't use any newline characters
         """
         # Get kwargs
         prefix = phone_number_kwargs.get("prefix") if phone_number_kwargs.get("prefix") is not None else "+xxx"
@@ -34,7 +32,7 @@ class PhoneNumberGenerator(TestDataGenerator):
 
         #Use prefix or override with whole format
         if format is None:
-            system_message += f", phone number format is not defined fully, but use this prefix: {prefix} and the typical format for the country specified if the country is specified."
+            system_message += f", phone number format is not defined fully, but use this prefix/prefix definition: {prefix} and the typical format for the country specified if the country is specified."
         else:
             system_message += f", phone number format is exactly defined as: {format}"
 
