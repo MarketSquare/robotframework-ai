@@ -1,5 +1,7 @@
-# NOTES
+# TASKS
+# Add direct lines and its cases
 # Add smth when the country argument is something stupid - IF clause to shut it down? or take closest country?
+# Create RF example and Docs
 
 # IMPORTS
 import json
