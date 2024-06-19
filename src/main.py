@@ -13,9 +13,9 @@ def real_test_data_generator():
     generator.set_amount(5)
     # generator.set_format("")
 
-    generator.set_kwarg("prefix", "00")
+    # generator.set_kwarg("prefix", "00")
     # generator.set_kwarg("format", "+xxx-xxx-xxx-xxx")
-    generator.set_kwarg("country", "czechia")
+    # generator.set_kwarg("country", "czechia")
     # generator.set_kwarg("mix_format", "True")
 
     response = generator.generate_test_data()
@@ -44,7 +44,7 @@ def pytests():
 if __name__ == "__main__":
     setup_logging(enabled=True, for_tests=False, console_logging=False ,file_logging=True)
     
-    real_test_data_generator()
+    # real_test_data_generator()
     # chatbot()
     # robot_tests()
     # pytests()
