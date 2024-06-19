@@ -11,12 +11,12 @@ def real_test_data_generator():
     generator.set_ai_model("openai")
     generator.set_type("phone_number")
     generator.set_amount(5)
-    # generator.set_format("") # OG from Stijn
+    # generator.set_format("")
 
     # generator.set_kwarg("prefix", "00")
-    # generator.set_kwarg("format", "+1-212-456-7890")
+    # generator.set_kwarg("format", "+xxx-xxx-xxx-xxx")
     generator.set_kwarg("country", "czechia")
-    generator.set_kwarg("mix_format", "False")
+    generator.set_kwarg("mix_format", "True")
 
     response = generator.generate_test_data()
     print("\n\n\n", response, "\n\n\n")
