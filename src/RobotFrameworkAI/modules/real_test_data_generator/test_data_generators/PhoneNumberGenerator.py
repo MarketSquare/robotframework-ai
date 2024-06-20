@@ -3,6 +3,10 @@
 # Add smth when the country argument is something stupid - IF clause to shut it down? or take closest country?
 # Create RF example and Docs
 
+# BUGS TO SOLVE
+# phone_format does not correctly override prefix
+
+
 # IMPORTS
 import json
 from RobotFrameworkAI.modules.real_test_data_generator.test_data_generators.TestDataGenerator import TestDataGenerator
@@ -28,15 +32,15 @@ class PhoneNumberGenerator(TestDataGenerator):
         """
         # Get kwargs
         prefix = phone_number_kwargs.get("prefix") if phone_number_kwargs.get("prefix") is not None else "+xxx"
-        format = phone_number_kwargs.get("format", None)
+        phone_format = phone_number_kwargs.get("phone_format", None)
         country = phone_number_kwargs.get("country", None)
         mix_format = True if phone_number_kwargs.get("mix_format") == "True" else False
 
         #Use prefix or override with whole format
-        if format is None:
+        if phone_format is None:
             system_message += f", phone number format is not defined fully, but use this prefix/prefix definition: {prefix} and the typical format for the country specified if the country is specified."
         else:
-            system_message += f", phone number format is exactly defined as: {format}"
+            system_message += f", phone number format is exactly defined as: {phone_format}"
 
         # Country and Mixer
         if country is not None and mix_format is False:
