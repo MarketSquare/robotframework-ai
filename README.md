@@ -53,6 +53,18 @@ Generate 10 addresses from Finland using the gpt-3.5-turbo from OpenAI in the de
 
     Generate Test Data    openai    address    gpt-3.5-turbo    10    None    1024    1    .5    0    0    country=finland
 
+### Phone Numbers
+When generating phone numbers, additional arguments are available.
+These arguments are as follows:
+- **country:str:** The country on which the [number prefix](https://www.iban.com/dialing-codes) and phone format is based. If prefix or phone format are defined in arguments, they override this argument. If None, will generate numbers from different countries around the world in international format. Default = None
+- **prefix:str:**
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+- **phone_format:str:**
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+- **mix_format:str:**
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
 ## Chatbot
 
 `Chatbot` is a simple response generating library for `Robot Framework` similar to

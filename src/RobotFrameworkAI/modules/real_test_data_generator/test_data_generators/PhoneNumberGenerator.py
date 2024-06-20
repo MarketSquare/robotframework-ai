@@ -5,7 +5,7 @@
 
 # BUGS TO SOLVE
 # phone_format does not correctly override prefix
-
+# Add that when country code is none, the all numbers produced are in internation format
 
 # IMPORTS
 import json
