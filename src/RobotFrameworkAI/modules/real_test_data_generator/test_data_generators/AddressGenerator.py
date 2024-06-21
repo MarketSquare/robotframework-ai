@@ -1,5 +1,9 @@
 import json
 from RobotFrameworkAI.modules.real_test_data_generator.test_data_generators.TestDataGenerator import TestDataGenerator
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class AddressGenerator(TestDataGenerator):
@@ -22,11 +26,13 @@ class AddressGenerator(TestDataGenerator):
         country_message = country if country is not None else "different countries around the world"
         user_message = f"Give me a list {amount} different companies from {country_message} and the address of their HQ"
         return self.create_message(system_message, user_message)
-    
+
     def format_response(self, response):
         response = response.message
         try:
             addresses = json.loads(response)
-        except json.JSONDecodeError:
-            raise Exception(f"The response couldn't be parsed to JSON.\nResponse:\n\n{response}")
+        except json.JSONDecodeError as e:
+            error = f"The response couldn't be parsed to JSON. Response: {response}. Error {e}"
+            logger.error(error)
+            raise
         return [address["address"] for address in addresses["addresses"]]

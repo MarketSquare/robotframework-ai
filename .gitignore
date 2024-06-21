@@ -165,3 +165,7 @@ log.html
 output.xml
 interactive_console_output.xml
 report.html
+
+# Log folders
+/logs
+/logs_test

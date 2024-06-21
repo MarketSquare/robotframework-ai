@@ -4,6 +4,10 @@ from openai import OpenAI
 from RobotFrameworkAI.ai_interface.ai_model_services.AIModelStrategy import AIModelStrategy
 from RobotFrameworkAI.objects.response.Response import Response
 from RobotFrameworkAI.objects.response.ResponseMetadata import ResponseMetadata
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class OpenAIService(AIModelStrategy):
@@ -35,6 +39,7 @@ class OpenAIService(AIModelStrategy):
             frequency_penalty = arguments["frequency_penalty"],
             presence_penalty = arguments["presence_penalty"]
         )
+        logger.debug(f"OpenAI chat completion: {chat_completion}")
         metadata = ResponseMetadata(
             self.name,
             model,
@@ -52,4 +57,7 @@ class OpenAIService(AIModelStrategy):
     def validate_prompt(self, model:str):
         models = ["gpt-3.5-turbo"]
         if model not in models:
-            raise ValueError(f"Invalid value '{model}' for 'model'. Model not found in the available models.")
+            error_message = f"Invalid model: `{model}`. Valid models are: `{'`, `'.join(models)}`"
+            logger.error(error_message)
+            raise ValueError(error_message)
+        return True

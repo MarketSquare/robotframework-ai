@@ -3,6 +3,10 @@ from robot.api.deco import keyword, library
 from RobotFrameworkAI.modules.Module import Module
 from RobotFrameworkAI.modules.real_test_data_generator.test_data_generators.AddressGenerator import AddressGenerator
 from RobotFrameworkAI.modules.real_test_data_generator.test_data_generators.UserDataGenerator import UserDataGenerator
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 @library
@@ -25,12 +29,12 @@ class RealTestDataGenerator(Module):
             "address": AddressGenerator(),
             "user_data": UserDataGenerator(),
         }
+        self.type = None
         self.amount = 3
         self.format = None
         self.response_format = None
         self.kwargs = {}
 
-    
     @keyword
     def generate_test_data(
             self,
@@ -47,7 +51,7 @@ class RealTestDataGenerator(Module):
             response_format:dict=None,
             **kwargs
         ):
-        """        
+        """
         RealTestDataGenerator
         =====================
 
@@ -110,6 +114,7 @@ class RealTestDataGenerator(Module):
 
         Each argument has its own setter, the name of the keyword is 'set' plus the name of the argument e.g. Set AI Model for AI Model.
         """        
+        logger.debug(f"Calling keyword: Generate Test Data with arguments: (ai_model: {ai_model}), (type: {type}), (model: {model}), (amount: {amount}), (format: {format}), (max_tokens: {max_tokens}), (temperature: {temperature}), (top_p: {top_p}), (frequency_penalty: {frequency_penalty}), (presence_penalty: {presence_penalty}), (response_format: {response_format}), (kwargs: {kwargs})")
         # Set defaut values for arguments
         argument_values = self.get_default_values_for_common_arguments(
             ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format
@@ -119,9 +124,11 @@ class RealTestDataGenerator(Module):
         type, amount, format, kwargs = self.get_default_values_for_real_test_data_generator_specifc_arguments(type, amount, format, kwargs)
 
         if ai_model is None or type is None:
-            raise ValueError("Both ai_model and type are required.")
+            error_message = f"Both ai_model and type are required and can't be None. AI model: `{ai_model}`, Type: `{type}`"
+            logger.error(error_message)
+            raise ValueError(error_message)
 
-        self.validate_common_input_arguments(max_tokens, temperature, top_p, frequency_penalty, presence_penalty)
+        self.validate_common_input_arguments(temperature, top_p, frequency_penalty, presence_penalty)
         self.validate_module_specific_arguments(type)
         generator = self.generators[type]
         message = generator.create_prompt_message(amount, format, kwargs)
@@ -155,40 +162,47 @@ class RealTestDataGenerator(Module):
         error_messages = []        
         if not self.is_valid_type(type):
             error_messages.append(f"Invalid value '{type}' for 'type'. Value must be in: {', '.join(self.generators.keys())}.")
+
         if error_messages:
-            raise ValueError("\n".join(error_messages))
+            error_message = f"Invalid input argument(s): {' '.join(error_messages)}"
+            logger.error(error_message)
+            raise ValueError(error_message)
+        return True
 
     def is_valid_type(self, type:str):
         return type in self.generators
     
     # Setters
     @keyword
-    def set_type(self, type:str):
+    def set_type(self, type: str):
         """
         Setter for the Type argument.
         type: str: The type of test data to create, e.g., "address", "user_data", etc. Currently supporting: "address".
         See the RobotFrameworkAI docs for more information about setters.
         """
+        logger.debug(f"Calling keyword: Set Type. Changing Type from `{self.type}` to `{type}`")
         self.type = type
 
     @keyword
-    def set_amount(self, amount:int):
+    def set_amount(self, amount: int):
         """
         Setter for the Amount argument.
         amount: int: The amount of rows of test data to generate.
         Default = 3.
         See the RobotFrameworkAI docs for more information about setters.
         """
+        logger.debug(f"Calling keyword: Set Amount. Changing Amount from `{self.amount}` to `{amount}`")
         self.amount = amount
 
     @keyword
-    def set_format(self, format:str):
+    def set_format(self, format: str):
         """
         Setter for the Format argument.
         format: str: The format in which the test data will be given. If None, will return a 2-dimensional list.
         Default = None.
         See the RobotFrameworkAI docs for more information about setters.
         """
+        logger.debug(f"Calling keyword: Set Format. Changing Format from `{self.format}` to `{format}`")
         self.format = format
 
     @keyword
@@ -200,4 +214,5 @@ class RealTestDataGenerator(Module):
         Set to None to unset it.
         See the RobotFrameworkAI docs for more information about setters.
         """
+        logger.debug(f"Calling keyword: Set Kwarg. Changing Kwarg `{argument}` to `{value}`")
         self.kwargs[argument] = value

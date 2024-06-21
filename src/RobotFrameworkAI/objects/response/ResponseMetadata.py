@@ -18,3 +18,8 @@ class ResponseMetadata:
         self.completion_tokens = completion_tokens
         self.time = time
         self.kwargs = kwargs
+
+
+    def __str__(self):
+        additional_args = ', '.join([f"({key}: {value})" for key, value in self.kwargs.items()])
+        return f"(AI Model: {self.ai_model}), (Model: {self.model}), (Finish Reason: {self.finish_reason}), (Prompt Tokens: {self.prompt_tokens}), (Completion Tokens: {self.completion_tokens}), (Time: {self.time})" + (f", {additional_args}" if additional_args else "")

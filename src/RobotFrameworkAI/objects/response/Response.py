@@ -16,3 +16,7 @@ class Response:
     def __init__(self, message:str, metadata:ResponseMetadata) -> None:
         self.message = message
         self.metadata = metadata
+
+    def __str__(self):
+        return f"Response: (Message: {self.message}), {self.metadata}"
+    

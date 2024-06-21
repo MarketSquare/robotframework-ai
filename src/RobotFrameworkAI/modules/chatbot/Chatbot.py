@@ -1,6 +1,10 @@
 from robot.api.deco import keyword, library
 
 from RobotFrameworkAI.modules.Module import Module
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 @library
@@ -103,6 +107,8 @@ class Chatbot(Module):
 
         Each argument has its own setter, the name of the keyword is 'set' plus the name of the argument e.g. Set AI Model for AI Model.
         """        
+        
+        logger.debug(f"Calling keyword: Generate Response with arguments: (ai_model: {ai_model}), (message: {message}), (model: {model}), (max_tokens: {max_tokens}), (temperature: {temperature}), (top_p: {top_p}), (frequency_penalty: {frequency_penalty}), (presence_penalty: {presence_penalty}), (keep_history: {keep_history}), (response_format: {response_format})")
         # Set defaut values for arguments
         argument_values = self.get_default_values_for_common_arguments(
             ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format
@@ -112,9 +118,11 @@ class Chatbot(Module):
         message, keep_history = self.get_default_values_for_chatbot_specifc_arguments(message, keep_history)
 
         if ai_model is None or message is None:
-            raise ValueError("Both ai_model and message are required.")
+            error_message = f"Both ai_model and message are required and can't be None. AI model: `{ai_model}`, Message: `{message}`"
+            logger.error(error_message)
+            raise ValueError(error_message)
         
-        self.validate_common_input_arguments(max_tokens, temperature, top_p, frequency_penalty, presence_penalty)
+        self.validate_common_input_arguments(temperature, top_p, frequency_penalty, presence_penalty)
         message = self.create_message(message, keep_history)
         prompt = self.create_prompt(
             ai_model,
@@ -148,16 +156,17 @@ class Chatbot(Module):
 
     # Setters
     @keyword
-    def set_message(self, message:str):
+    def set_message(self, message: str):
         """
         Setter for the Message argument.
         message: str: The message you want to send to the AI model, e.g., "What is the weather today?".
         See the RobotFrameworkAI docs for more information about setters.
         """
+        logger.debug(f"Calling keyword: Set Message. Changing Message from `{self.message}` to `{message}`")
         self.message = message
 
     @keyword
-    def set_keep_history(self, keep_history:bool):
+    def set_keep_history(self, keep_history: bool):
         """
         Setter for the Keep History argument.
         keep_history: bool: A flag to keep the chat history of previous messages. When setting this to True, your previous prompt and
@@ -169,4 +178,5 @@ class Chatbot(Module):
         response. So leaving this on could quickly drain all your tokens.
         See the RobotFrameworkAI docs for more information about setters.
         """
+        logger.debug(f"Calling keyword: Set Keep History. Changing Keep History from `{self.keep_history}` to `{keep_history}`")
         self.keep_history = keep_history
