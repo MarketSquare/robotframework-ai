@@ -94,7 +94,7 @@ def setup_logging(enabled=True, for_tests=False, console_logging=False, file_log
 
     Has 4 argument flags.
 
-    enabled: default True, if set to False this keyword does nothing.
+    enabled: default True, if set to False this keyword does nothing (setting it to false after enabling logging doesn't turn it off yet).
     for_tests: default False, if set to True logs the logs to the logs_test folder instead of the logs folder.
     console_logging: default True, set to False to disable the logs being printed to the console.
     file_logging: default True, set to False to disable the logs being logged to a file.

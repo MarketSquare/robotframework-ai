@@ -161,6 +161,7 @@ cython_debug/
 .vscode/
 
 # Robot Framework test results
+results/
 log.html
 output.xml
 interactive_console_output.xml
