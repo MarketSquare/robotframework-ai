@@ -112,7 +112,7 @@ class Chatbot(Module):
         Each argument has its own setter, the name of the keyword is 'set' plus the name of the argument e.g. Set AI Model for AI Model.
         """        
 
-         # Set defaut values for arguments
+        # Set defaut values for arguments
         # If arguments are not given directly, get its default value. This is the value of the class attribute with the same name
         ai_model, system_message, message, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, keep_history, response_format = self.get_default_values_for_arguments(
             ai_model = ai_model,
