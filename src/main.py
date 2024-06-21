@@ -49,7 +49,7 @@ def pytests():
     pytest.main(["utest/"])
 
 if __name__ == "__main__":
-    setup_logging(enabled=True, for_tests=False, console_logging=False ,file_logging=True)
+    setup_logging(enabled=True, for_tests=False, console_logging=False, file_logging=True)
     
     real_test_data_generator()
     chatbot()

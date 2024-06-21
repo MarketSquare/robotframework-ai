@@ -91,7 +91,6 @@ class Module:
         )
         return prompt
 
-
     def get_default_values_for_arguments(self, **arguments):
         """
         Gets default values for arguments
