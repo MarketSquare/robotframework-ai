@@ -15,8 +15,9 @@ class AddressGenerator(TestDataGenerator):
     """
     def __init__(self) -> None:
         super().__init__()
+        self.type = "address"
 
-    def create_prompt_message(self, amount:int, format:str, address_kwargs:dict):
+    def create_prompt_messages(self, amount:int, format:str, address_kwargs:dict):
         system_message = """
             You generate a list of just addresses nothing else not the company name, in json.
             Call the list 'addresses' and each list item is a dictionary with the key 'address', don't use any newline characters
@@ -25,7 +26,7 @@ class AddressGenerator(TestDataGenerator):
         system_message += f", in the format: {format}" if format is not None else ""
         country_message = country if country is not None else "different countries around the world"
         user_message = f"Give me a list {amount} different companies from {country_message} and the address of their HQ"
-        return self.create_message(system_message, user_message)
+        return system_message, user_message
 
     def format_response(self, response):
         response = response.message

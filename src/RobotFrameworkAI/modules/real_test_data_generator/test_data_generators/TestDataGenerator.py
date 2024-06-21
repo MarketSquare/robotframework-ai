@@ -22,16 +22,10 @@ class TestDataGenerator:
     to use that test data generator for the generation of data.
     """
     def __init__(self) -> None:
-        pass
+        self.type = "base_test_data_generator"
 
-    def create_prompt_message(self, amount, format):
+    def create_prompt_messages(self, amount, format):
         pass
 
     def format_response(self, response):
         pass
-    
-    def create_message(self, system_message:str, user_message:str):
-        return [
-            {"role": "system", "content": system_message},
-            {"role": "user", "content": user_message}
-        ]

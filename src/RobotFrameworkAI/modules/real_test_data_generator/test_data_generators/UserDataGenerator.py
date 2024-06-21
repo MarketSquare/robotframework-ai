@@ -9,8 +9,9 @@ class UserDataGenerator(TestDataGenerator):
     """
     def __init__(self) -> None:
         super().__init__()
+        self.type = "user_data"
 
-    def create_prompt_message(self, amount, format):
+    def create_prompt_messages(self, amount, format):
         pass
 
     def format_response(self):

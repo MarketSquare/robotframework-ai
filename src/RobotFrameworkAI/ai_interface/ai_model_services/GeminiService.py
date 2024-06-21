@@ -14,7 +14,9 @@ class GeminiService(AIModelStrategy):
     """
     def __init__(self) -> None:
         super().__init__()
-        self.ai_model = None
+        self.name = "gemini"
+        client = None
+        # self.ai_tools = self._discover_tools("gemini_tools", GeminiTool, client)
         
     def send_prompt(self, prompt):
         return "Beep boop"
