@@ -86,7 +86,7 @@ def create_handlers(log_folder = "logs"):
         write_ascii_to_file(log_filename)
     return console_handler, file_handler
 
-def setup_logging(enabled=True, for_tests=False, console_logging=True, file_logging=True):
+def setup_logging(enabled=True, for_tests=False, console_logging=False, file_logging=True):
     """
     Sets up the necessary evironment to allow logging.
 
@@ -101,18 +101,19 @@ def setup_logging(enabled=True, for_tests=False, console_logging=True, file_logg
     """
     if not enabled:
         return
-    console_handler, file_handler = create_handlers("logs_test") if for_tests else create_handlers()
+
+    log_folder = "logs_test" if for_tests else "logs"
+    console_handler, file_handler = create_handlers(log_folder)
 
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.DEBUG)
 
-    if root_logger.hasHandlers():
-        root_logger.handlers.clear()
-
-    if console_logging:
-        root_logger.addHandler(console_handler)
-    if file_logging:
-        root_logger.addHandler(file_handler)
+    if not any(isinstance(handler, UnicodeSafeHandler) for handler in root_logger.handlers):
+        if console_logging:
+            root_logger.addHandler(console_handler)
+    if not any(isinstance(handler, TimedRotatingFileHandler) for handler in root_logger.handlers):
+        if file_logging:
+            root_logger.addHandler(file_handler)
 
     logging.getLogger(__name__).debug(f"Calling keyword: Setup Logging with arguments: (enabled: {enabled}), (for_tests: {for_tests}), (console_logging: {console_logging}), (file_logging: {file_logging})")
 
@@ -123,6 +124,5 @@ def write_ascii_to_file(file_path):
     ascii_text = []
     ascii_text.extend(string_to_ascii("--LOGS--", 28))
     ascii_text.extend(string_to_ascii(datetime.now().strftime("%Y-%m-%d"), 14))
-    print(ascii_text)
     with open(file_path, 'w') as f:
-        f.write('\n'+'\n'.join(ascii_text)+'\n')
+        f.write('\n' + '\n'.join(ascii_text) + '\n')

@@ -1,9 +1,13 @@
+import importlib
+import inspect
+import os
+import pkgutil
 from robot.api.deco import keyword, library
 
 from RobotFrameworkAI.modules.Module import Module
-from RobotFrameworkAI.modules.real_test_data_generator.test_data_generators.AddressGenerator import AddressGenerator
-from RobotFrameworkAI.modules.real_test_data_generator.test_data_generators.UserDataGenerator import UserDataGenerator
 import logging
+
+from RobotFrameworkAI.modules.real_test_data_generator.test_data_generators.TestDataGenerator import TestDataGenerator
 
 
 logger = logging.getLogger(__name__)
@@ -19,23 +23,56 @@ class RealTestDataGenerator(Module):
     thus should be findable on for example Google maps.
 
     The aim om this module is to overcome the issues the library Faker has.
-    So if Faker can already generate has no issues generating email addresses, then the
+    So if Faker can already generate generating email addresses with no issues, then the
     RealTestDataGenerator wont implement this logic.
     """
     def __init__(self) -> None:
         super().__init__()
-        self.name = "real_test_data_generator"
-        self.generators = {
-            "address": AddressGenerator(),
-            "user_data": UserDataGenerator(),
-        }
-        self.ai_tool = "text_generation"
+        self.module_name = "real_test_data_generator"
+        self.generators = self._discover_test_data_generators()
+        self.ai_tool = "text_generator"
         # Set arguments
         self.type = None
         self.amount = 3
         self.format = None
-        self.response_format = None
         self.kwargs = {}
+
+    def _discover_test_data_generators(self):
+        """
+        Dynamically collects all TestDataGenerator implementations in the test_data_generators folder.
+
+        A dictionary will be created with the type of each TestDataGenerator as the key and an instance as value.
+        The type comes from the type attribute in the implementation of the TestDataGenerator.
+        """
+        test_data_generators = {}
+        package = 'RobotFrameworkAI.modules.real_test_data_generator.test_data_generators'
+        package_path = os.path.join(os.path.dirname(__file__), 'test_data_generators')
+        
+        logger.debug(f"Looking for modules in package path: {package_path}")
+
+        if not os.path.exists(package_path):
+            logger.error(f"Package path does not exist: {package_path}")
+            return test_data_generators
+
+        for _, module_name, _ in pkgutil.iter_modules([package_path]):
+            logger.debug(f"Found module: {module_name}")
+            try:
+                module = importlib.import_module(f"{package}.{module_name}")
+                logger.debug(f"Imported module: {module_name}")
+            except Exception as e:
+                logger.error(f"Failed to import module {module_name}: {e}")
+                raise
+            
+            for name, obj in inspect.getmembers(module, inspect.isclass):
+                if issubclass(obj, TestDataGenerator) and obj is not TestDataGenerator:
+                    try:
+                        instance = obj()
+                        test_data_generators[instance.type] = instance
+                        logger.debug(f"Discovered test data generator of type: {instance.type} in class {name}")
+                    except Exception as e:
+                        logger.error(f"Failed to instantiate {name}: {e}")
+                        raise
+        return test_data_generators
 
     @keyword
     def generate_test_data(
@@ -116,30 +153,44 @@ class RealTestDataGenerator(Module):
 
         Each argument has its own setter, the name of the keyword is 'set' plus the name of the argument e.g. Set AI Model for AI Model.
         """        
-        logger.debug(f"Calling keyword: Generate Test Data with arguments: (ai_model: {ai_model}), (type: {type}), (model: {model}), (amount: {amount}), (format: {format}), (max_tokens: {max_tokens}), (temperature: {temperature}), (top_p: {top_p}), (frequency_penalty: {frequency_penalty}), (presence_penalty: {presence_penalty}), (response_format: {response_format}), (kwargs: {kwargs})")
-        # Set defaut values for arguments
-        argument_values = self.get_default_values_for_common_arguments_for_text_generators(
-            ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format
+        # If arguments are not given directly, get its default value. This is the value of the class attribute with the same name
+        ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, \
+        type, amount, format, kwargs = self.get_default_values_for_arguments(
+            ai_model=ai_model,
+            model=model,
+            max_tokens=max_tokens,
+            temperature=temperature, 
+            top_p=top_p,
+            frequency_penalty=frequency_penalty,
+            presence_penalty=presence_penalty,
+            type=type,
+            amount=amount,
+            format=format,
+            kwargs=kwargs
         )
-        ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format = argument_values
-        response_format = {"type": "json_object"}
-        type, amount, format, kwargs = self.get_default_values_for_real_test_data_generator_specifc_arguments(type, amount, format, kwargs)
-
-        try:
-            if ai_model is None or type is None:
-                raise ValueError(f"Both ai_model and type are required and can't be None. AI model: `{ai_model}`, Type: `{type}`")
-        except Exception as e:
-            logger.error(e)
-            raise
-
-        self.validate_common_input_arguments(max_tokens, temperature, top_p, frequency_penalty, presence_penalty)
-        self.validate_module_specific_arguments(type)
+        # Response format should always be a json object
+        response_format = { "type": "json_object" }
+        # Log the arguments
+        args = locals()
+        args.pop("self")
+        logger.debug(f"Calling keyword `Generate Test Data` with arguments: {', '.join(f'({k}: {v})' for k, v in args.items())}")
+        # Validate arguments
+        self.validate_input_arguments(
+            type=type,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            top_p=top_p,
+            frequency_penalty=frequency_penalty,
+            presence_penalty=presence_penalty
+        )
         generator = self.generators[type]
-        message = generator.create_prompt_message(amount, format, kwargs)
+        system_message, user_message = generator.create_prompt_messages(amount, format, kwargs)
         prompt = self.create_prompt(
             self.ai_tool,
             ai_model,
-            message,
+            system_message,
+            user_message,
+            None,
             model,
             max_tokens,
             temperature,
@@ -152,35 +203,16 @@ class RealTestDataGenerator(Module):
         response = generator.format_response(response)
         return response
 
-    def get_default_values_for_real_test_data_generator_specifc_arguments(self, type:str, amount:int, format:str, kwargs:dict):
-        type = type if type is not None else self.type
-        amount = amount if amount is not None else self.amount
-        format = format if format is not None else self.format
-
-        # Do the same but for kwargs arguments
-        for key, value in self.kwargs.items():
-            if key not in kwargs and value is not None:
-                kwargs[key] = value
-        return type, amount, format, kwargs
-
-    def validate_module_specific_arguments(self, type:str):
-        error_messages = []        
-        if not self.is_valid_type(type):
-            error_messages.append(f"Invalid value '{type}' for 'type'. Value must be in: {', '.join(self.generators.keys())}.")
-        try:
-            if error_messages:
-                raise ValueError(f"Invalid input argument(s): {' '.join(error_messages)}")
-        except Exception as e:
-            logger.error(e)
-            raise
-        return True
-
-    def is_valid_type(self, type:str):
-        return type in self.generators
+    # Validation methods
+    def is_valid_type(self, type: str):
+        if type not in self.generators:
+            error_message = f"Invalid type: `{type}`. Valid type's are: `{'`, `'.join(self.generators)}`"
+            logger.error(error_message)
+            raise ValueError(error_message)
     
     # Setters
     @keyword
-    def set_type(self, type: str):
+    def set_type(self, type: str = None):
         """
         Setter for the Type argument.
         type: str: The type of test data to create, e.g., "address", "user_data", etc. Currently supporting: "address".
@@ -190,7 +222,7 @@ class RealTestDataGenerator(Module):
         self.type = type
 
     @keyword
-    def set_amount(self, amount: int):
+    def set_amount(self, amount: int = None):
         """
         Setter for the Amount argument.
         amount: int: The amount of rows of test data to generate.
@@ -201,7 +233,7 @@ class RealTestDataGenerator(Module):
         self.amount = amount
 
     @keyword
-    def set_format(self, format: str):
+    def set_format(self, format: str = None):
         """
         Setter for the Format argument.
         format: str: The format in which the test data will be given. If None, will return a 2-dimensional list.
@@ -212,7 +244,7 @@ class RealTestDataGenerator(Module):
         self.format = format
 
     @keyword
-    def set_kwarg(self, argument, value):
+    def set_kwarg(self, argument, value = None):
         """
         Setter for Kwarg arguments. 
         Give the name of the kwarg argument and the value you want to set it to. 

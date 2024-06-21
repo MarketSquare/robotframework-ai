@@ -1,7 +1,3 @@
-import importlib
-import inspect
-import os
-import pkgutil
 import logging
 from robot.api.deco import keyword, library
 
@@ -10,6 +6,7 @@ from RobotFrameworkAI.objects.prompt.Prompt import Prompt
 from RobotFrameworkAI.objects.prompt.PromptConfig import PromptConfig
 from RobotFrameworkAI.objects.prompt.PromptMetadata import PromptMetadata
 from RobotFrameworkAI.objects.prompt.ai_tool_data.AIToolData import AIToolData
+from RobotFrameworkAI.objects.prompt.PromptMessage import PromptMessage
 
 
 logger = logging.getLogger(__name__)
@@ -32,11 +29,11 @@ class Module:
     This also means that setting these arguments will set them for every module.
 
     To create a new module, create a new folder in the modules folder for all its logic.
-    Create a keyword that atleast accepts all these arguments and uses the get_default_values_for_common_arguments
+    Create a keyword that atleast accepts all these arguments and uses the get_default_values_for_arguments
     method to set the values of each argument incase they are not given.
     Make sure each arguments defaults to None so the setters can take effect.
     
-    Call the create_prompt method to create a Prompt and use this with the send_prompt method from the AI_Interface.
+    Call the create_prompt method to create a Prompt and use this with the cal_ai_tool method from the AI_Interface.
     This wil return a Response which then needs to be structured in the way the users of the module expect it.
 
     NOTE: When creating a package all module will get inherited by the RobotFrameworkAI library. This way all
@@ -47,7 +44,7 @@ class Module:
 
     def __init__(self) -> None:
         self.ai_interface = AI_Interface()
-        self.name = "base_module"
+        self.module_name = "base_module"
         self.ai_tool = None
         # Set arguments
         self.ai_model = None
@@ -63,7 +60,9 @@ class Module:
             self,
             ai_tool:str,
             ai_model:str,
-            message:list[dict],
+            system_message:str,
+            user_message:str,
+            history:str,            
             model:str,
             max_tokens:int,
             temperature:float,
@@ -74,6 +73,7 @@ class Module:
             ai_tool_data:AIToolData = None
         ) -> Prompt:
         config = PromptConfig(ai_tool, ai_model, model, response_format)
+        message = PromptMessage(system_message, user_message, history)
         arguments = {
             "max_tokens": max_tokens,
             "temperature": temperature,
@@ -81,7 +81,7 @@ class Module:
             "frequency_penalty": frequency_penalty,
             "presence_penalty": presence_penalty
         }
-        metadata = PromptMetadata(self.name)
+        metadata = PromptMetadata(self.module_name)
         prompt = Prompt(
             config,
             message,
@@ -91,74 +91,91 @@ class Module:
         )
         return prompt
 
-    def get_default_values_for_common_arguments_for_text_generators(
-            self,
-            ai_model: str,
-            model: str,
-            max_tokens: int,
-            temperature: float,
-            top_p: float,
-            frequency_penalty: float,
-            presence_penalty: float,
-            response_format: dict
-        ):
-        # Set defaut values for arguments
-        ai_model = ai_model if ai_model is not None else self.ai_model
-        model = model if model is not None else self.model
-        max_tokens = max_tokens if max_tokens is not None else self.max_tokens
-        temperature = temperature if temperature is not None else self.temperature
-        top_p = top_p if top_p is not None else self.top_p
-        frequency_penalty = frequency_penalty if frequency_penalty is not None else self.frequency_penalty
-        presence_penalty = presence_penalty if presence_penalty is not None else self.presence_penalty
-        response_format = response_format if response_format is not None else self.response_format
-        return ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format
 
-    def get_default_values_for_common_arguments_for_assistants(
-            self,
-            ai_model: str,
-            model: str,
-            temperature: float,
-            top_p: float,
-            response_format: dict
-        ):
-        # Set default values for arguments
-        ai_model = ai_model if ai_model is not None else self.ai_model
-        model = model if model is not None else self.model
-        temperature = temperature if temperature is not None else self.temperature
-        top_p = top_p if top_p is not None else self.top_p
-        response_format = response_format if response_format is not None else self.response_format
-        return ai_model, model, temperature, top_p, response_format
+    def get_default_values_for_arguments(self, **arguments):
+        """
+        Gets default values for arguments
 
-    def validate_common_input_arguments(self, max_tokens:int, temperature:float, top_p:float, frequency_penalty:float, presence_penalty:float):
-        error_messages = []
-        if not self.is_valid_max_tokens(max_tokens):
-            error_messages.append(f"Invalid value `{max_tokens}` for `max_tokens`. Value must be greater than 0 and less than or equal to 4096.")
-        if not self.is_valid_temperature(temperature):
-            error_messages.append(f"Invalid value `{temperature}` for `temperature`. Value must be between 0 and 2 (inclusive).")
-        if not self.is_valid_top_p(top_p):
-            error_messages.append(f"Invalid value `{top_p}` for `top_p`. Value must be between 0 and 1 (inclusive).")
-        if not self.is_valid_frequency_penalty(frequency_penalty):
-            error_messages.append(f"Invalid value `{frequency_penalty}` for `frequency_penalty`. Value must be between -2 and 2 (inclusive).")
-        if not self.is_valid_presence_penalty(presence_penalty):
-            error_messages.append(f"Invalid value `{presence_penalty}` for `presence_penalty`. Value must be between -2 and 2 (inclusive).")
-        try:
-            if error_messages:
-                raise ValueError(f"Invalid input argument(s): {' '.join(error_messages)}")
-        except Exception as e:
-            logger.error(e)
-            raise
-        return True
+        Returns a list with the new argument values in the same order as the arguments.
+
+        Example usage:
+
+            a, b, c = get_default_values_for_arguments(a=a, b=b, c=c)
+
+        Using setters, default values can be set as class attribute.
+        When using keyword without supplying all arguments, the value from the class attribute is used.
+
+        This method can be provided any number of arguments. If the argument was not given in the keyword, it is set to None.
+        When it is None, an attempt to get the class attribute of the same name as the argument is made.
+        If it is not None, there is no need for getting the default value as arguments provided in the keyword take priority over default values.
+
+        NOTE: This relies on **kwargs to keep its order. This works from Python 3.7+. In earlier versions, this method will return the arguments in a random order
+        """
+        new_values = []
+        # Argument name and value of argument
+        for key, value in arguments.items():
+            if value is not None:
+                if not hasattr(self, key):
+                    logger.warning(f"`{self.__class__.__name__}` object has no attribute `{key}`. Value of argument `{key}` is `{value}` and not None, so no setting a default value required.")
+                new_values.append(value)
+            else:
+                if not hasattr(self, key):
+                    error_message = f"`{self.__class__.__name__}` object has no attribute `{key}`. Value of argument `{key}` is `{value}` and not None, so setting a default value is required but not possible."
+                    logger.error(error_message)
+                    raise AttributeError(error_message)
+                new_values.append(getattr(self, key))
+        return new_values
     
-    def is_valid_max_tokens(self, max_tokens:int):
-        return 0 < max_tokens <= 4096
-    def is_valid_temperature(self, temperature:float):
-        return 0 <= temperature <= 2
-    def is_valid_top_p(self, top_p:float):
-        return 0 <= top_p <= 2
-    def is_valid_frequency_penalty(self, frequency_penalty:float):
-        return -2 <= frequency_penalty <= 2
-    def is_valid_presence_penalty(self, presence_penalty:float):
-        return -2 <= presence_penalty <= 2
+    def validate_input_arguments(self, **kwargs):
+        for key, value in kwargs.items():
+            # Call the corresponding validation method if it exists
+            validation_method_name = f'is_valid_{key}'
+            if hasattr(self, validation_method_name):
+                validation_method = getattr(self, validation_method_name, None)
+                validation_method(value)
+            # If the validation method does not exist raise an error
+            else:
+                error_message = f"`{self.__class__.__name__}` object is missing validation method `{validation_method_name}` for argument `{key}`. Make sure the argument {key} should exist and that the validation method is implemented."
+                logger.error(error_message)
+                raise ValidationMethodNotFoundError(error_message)
+        return True
+
+    # Validation methods
+    def is_valid_max_tokens(self, max_tokens: int):
+        if not (0 < max_tokens <= 4096):
+            error_message = f"Invalid value `{max_tokens}` for `max_tokens`. Value must be greater than 0 and less than or equal to 4096."
+            logger.error(error_message)
+            raise ValueError(error_message)
+
+    def is_valid_temperature(self, temperature: float):
+        if not (0 <= temperature <= 2):
+            error_message = f"Invalid value `{temperature}` for `temperature`. Value must be between 0 and 2 (inclusive)."
+            logger.error(error_message)
+            raise ValueError(error_message)
+
+    def is_valid_top_p(self, top_p: float):
+        if not (0 <= top_p <= 1):
+            error_message = f"Invalid value `{top_p}` for `top_p`. Value must be between 0 and 1 (inclusive)."
+            logger.error(error_message)
+            raise ValueError(error_message)
+
+    def is_valid_frequency_penalty(self, frequency_penalty: float):
+        if not (-2 <= frequency_penalty <= 2):
+            error_message = f"Invalid value `{frequency_penalty}` for `frequency_penalty`. Value must be between -2 and 2 (inclusive)."
+            logger.error(error_message)
+            raise ValueError(error_message)
+
+    def is_valid_presence_penalty(self, presence_penalty: float):
+        if not (-2 <= presence_penalty <= 2):
+            error_message = f"Invalid value `{presence_penalty}` for `presence_penalty`. Value must be between -2 and 2 (inclusive)."
+            logger.error(error_message)
+            raise ValueError(error_message)
+
+    def is_valid_message(self, message: str):
+        if message is None:
+            error_message = f"Argument `message` can not be None. Either set it using the `Set Message` keyword or supply the argument directly."
+            logger.error(error_message)
+            raise ValueError(error_message)
 
     # Setters
     @keyword
@@ -254,3 +271,20 @@ class Module:
         """
         logger.debug(f"Calling keyword: Set Response Format. Changing Response Format from `{self.response_format}` to `{response_format}`")
         self.response_format = response_format
+
+    @keyword
+    def set_message(self, message: str):
+        """
+        Setter for the Message argument.
+        message: str: The message you want to send to the AI model, e.g., "What is the weather today?".
+        See the RobotFrameworkAI docs for more information about setters.
+        """
+        logger.debug(f"Calling keyword: Set Message. Changing Message from `{self.message}` to `{message}`")
+        self.message = message
+
+
+class ValidationMethodNotFoundError(Exception):
+    """Exception raised when a validation method is not found."""
+
+    def __init__(self, error_message):
+        super().__init__(error_message)

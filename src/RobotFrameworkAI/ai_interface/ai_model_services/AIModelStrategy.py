@@ -9,17 +9,14 @@ logger = logging.getLogger(__name__)
 
 class AIModelStrategy:
     """
-    The interface class for AI model strategies.
-    A prompt can be handled by different AI models.
-    Each AI model can be used as a strategy to perform the task of responding to the prompt.
+    The abstract class for AI model specific communication
 
-    To add a new AI model, create a new class in this folder and have it inherit this interface.
-    Create the logic for unpacking a Prompt object, sending it to the AI model and pack its 
-    response in a Response object.
-
-    Make sure the send_prompt method is implemented to accept the Prompt and return the Response.
-    Adding an object of this class to the ai_models in the AI_Interface class will allow you to
-    to use that AI model for the generation of data.
+    Subclasses of this class are in charge of handling Prompts directed at the AI model they are in charge of.
+    Because of the way this is implemented, all the logic can be put in this abstract class.
+    These subclasses only require a few attribute specific to that AI model.
+    
+    After sending the Prompts to the AI model specific class (this class), it will get send
+    to the right AI tool class of that AI model.
     """
     def __init__(self) -> None:
         self.ai_tools = None
@@ -27,7 +24,7 @@ class AIModelStrategy:
 
     def _discover_tools(self, package: str, tool_interface, ai_client):
         """
-        Dynamically collects all tool implementations in the specified package.
+        Dynamically collects all tool implementations in the specified package
 
         A dictionary will be created with the tool attribute as the key and an instance as value.
         """
@@ -49,7 +46,7 @@ class AIModelStrategy:
                 logger.debug(f"Imported module: {module_name}")
             except Exception as e:
                 logger.error(f"Failed to import module {module_name}: {e}")
-                continue
+                raise
 
             for name, obj in inspect.getmembers(module, inspect.isclass):
                 if issubclass(obj, tool_interface) and obj is not tool_interface:
@@ -63,6 +60,12 @@ class AIModelStrategy:
         return tools
 
     def call_ai_tool(self, prompt):
+        """
+        Sends the prompt to the right AI tool class
+
+        Depending on the AI tool assigned to the Prompt sends the Prompt to the right AI tool class.
+        Will raise an error if the AI model doesn't have the specific tool or model.
+        """
         model = prompt.config.model
         tool_name = prompt.config.ai_tool
         self.validate_tool(tool_name)
@@ -73,7 +76,7 @@ class AIModelStrategy:
 
     def validate_tool(self, tool_name: str):
         """
-        Validates whether the tool of the AI model is valid.
+        Validates whether the tool of the AI model is valid
 
         A list of all valid models can be found in the respective tool folder of the AI model.
         For OpenAI that would be the openai_tools folder. Each class in that folder that inherits

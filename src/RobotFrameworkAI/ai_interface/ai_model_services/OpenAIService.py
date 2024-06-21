@@ -19,35 +19,14 @@ logger = logging.getLogger(__name__)
 
 class OpenAIService(AIModelStrategy):
     """
-    This class is an implementation of the AIModelStrategy interface.
-    This is an strategy to handle task of responding to prompts.
-    This strategy does so by using the API from OpenAI.
+    The class in charge of handling communication with the OpenAI API 
+
+    This class is an implementation of the abstract class AIModelStrategy.
+    Prompts directed at the OpenAI API, will get send to the right OpenAI AI tool.
+    All the logic doing that can be found in the abstract class AIModelStrategy. 
     """
     def __init__(self) -> None:
         super().__init__()
         self.name = "openai"
         client = OpenAI(api_key=os.environ["OPENAI_KEY"])
         self.ai_tools = self._discover_tools("openai_tools", OpenAITool, client)
-
-
-    # def
-
-    # def assist():
-    #     pass
-
-    # def create_assistant(self):
-    #     assistant = self.ai_model.beta.assistants.create(
-    #         name="Test error explainer",
-    #         instructions="""When a Robot Framework test fails, you get called and read there code.
-    #         Based on the code you explain why the test fails or give an error.
-    #         You then also give suggestion on how to improve said code so the test succeeds""",
-    #         model="gpt-3.5-turbo",
-    #         tools=[{"type": "file_search"}],
-    #     )
-    #     return assistant
-
-    # def collect_files():
-    #     pass
-
-    # def add_files(self):
-    #     self.ai_model.beta.vector_stores.create(name="Code")

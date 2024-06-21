@@ -21,10 +21,11 @@ class Chatbot(Module):
     """
     def __init__(self) -> None:
         super().__init__()
-        self.name = "chatbot"
-        self.ai_tool = "text_generation"
-        # Set arguments
+        self.module_name = "chatbot"
+        self.ai_tool = "text_generator"
         self.history = []
+        # Set arguments
+        self.system_message = None
         self.message = None
         self.keep_history = False
         self.response_format = None
@@ -33,6 +34,7 @@ class Chatbot(Module):
     def generate_response(
             self,
             ai_model:str=None,
+            system_message:str=None,
             message:str=None,
             model:str=None,
             max_tokens:int=None,
@@ -48,7 +50,7 @@ class Chatbot(Module):
         =======
 
 
-        Chatbot_ is a simple response generating library for `Robot Framework`_ similar to
+        Chatbot_ is a simple response generating module for `Robot Framework`_ similar to
         ChatGPT on the web. You can ask it a question or give it a task to have it automatically
         reply to your emails.
 
@@ -110,28 +112,41 @@ class Chatbot(Module):
         Each argument has its own setter, the name of the keyword is 'set' plus the name of the argument e.g. Set AI Model for AI Model.
         """        
 
-        logger.debug(f"Calling keyword: Generate Response with arguments: (ai_model: {ai_model}), (message: {message}), (model: {model}), (max_tokens: {max_tokens}), (temperature: {temperature}), (top_p: {top_p}), (frequency_penalty: {frequency_penalty}), (presence_penalty: {presence_penalty}), (keep_history: {keep_history}), (response_format: {response_format})")
-        # Set defaut values for arguments
-        argument_values = self.get_default_values_for_common_arguments_for_text_generators(
-            ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format
+         # Set defaut values for arguments
+        # If arguments are not given directly, get its default value. This is the value of the class attribute with the same name
+        ai_model, system_message, message, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, keep_history, response_format = self.get_default_values_for_arguments(
+            ai_model = ai_model,
+            system_message = system_message,
+            message = message,
+            model = model,
+            max_tokens = max_tokens,
+            temperature = temperature,
+            top_p = top_p,
+            frequency_penalty = frequency_penalty,
+            presence_penalty = presence_penalty,
+            keep_history = keep_history,
+            response_format = response_format
         )
-        ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format = argument_values
-
-        message, keep_history = self.get_default_values_for_chatbot_specifc_arguments(message, keep_history)
-
-        try:
-            if ai_model is None or message is None:
-                raise ValueError(f"Both ai_model and message are required and can't be None. AI model: `{ai_model}`, Message: `{message}`")
-        except Exception as e:
-            logger.error(e)
-            raise
-        
-        self.validate_common_input_arguments(max_tokens, temperature, top_p, frequency_penalty, presence_penalty)
-        message = self.create_message(message, keep_history)
+        # Log the arguments
+        args = locals()
+        args.pop("self")
+        logger.debug(f"Calling keyword `Generate Response` with arguments: {', '.join(f'({k}: {v})' for k, v in args.items())}")
+        # Validate arguments
+        self.validate_input_arguments(
+            message = message,
+            max_tokens = max_tokens,
+            temperature = temperature,
+            top_p = top_p,
+            frequency_penalty = frequency_penalty,
+            presence_penalty = presence_penalty
+        )
+        history = self.history if keep_history else None
         prompt = self.create_prompt(
             self.ai_tool,
             ai_model,
+            system_message,
             message,
+            history,
             model,
             max_tokens,
             temperature,
@@ -144,34 +159,25 @@ class Chatbot(Module):
         self.set_history(prompt, response, keep_history)
         return response.message
 
-    def get_default_values_for_chatbot_specifc_arguments(self, message:str, keep_history:bool):        
-        message = message if message is not None else self.message
-        keep_history = keep_history if keep_history is not None else self.keep_history
-        return message, keep_history
-
-    def create_message(self, message:str, keep_history:bool):
-        if keep_history:
-            return self.history + [{"role": "user", "content": message}]
-        return [{"role": "user", "content": message}]
-    
     def set_history(self, prompt:object, response:object, keep_history:bool):
         if not keep_history:
             self.history = []
-        self.history += prompt.message + [{"role": "assistant", "content": response.message}]
+        self.history.append({"user": prompt.message.user})
+        self.history.append({"assistant": response.message})
 
     # Setters
     @keyword
-    def set_message(self, message: str):
+    def set_system_message(self, system_message: str = None):
         """
-        Setter for the Message argument.
-        message: str: The message you want to send to the AI model, e.g., "What is the weather today?".
+        Setter for the System Message argument.
+        system_message: str: The instruction for the AI model, e.g., "You are a helpful assistant.".
         See the RobotFrameworkAI docs for more information about setters.
         """
-        logger.debug(f"Calling keyword: Set Message. Changing Message from `{self.message}` to `{message}`")
-        self.message = message
+        logger.debug(f"Calling keyword: Set System Message. Changing System Message from `{self.system_message}` to `{system_message}`")
+        self.system_message = system_message
 
     @keyword
-    def set_keep_history(self, keep_history: bool):
+    def set_keep_history(self, keep_history: bool = None):
         """
         Setter for the Keep History argument.
         keep_history: bool: A flag to keep the chat history of previous messages. When setting this to True, your previous prompt and

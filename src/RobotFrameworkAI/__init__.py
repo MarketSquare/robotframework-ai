@@ -4,10 +4,11 @@ import inspect
 
 from .modules.real_test_data_generator.RealTestDataGenerator import RealTestDataGenerator
 from .modules.chatbot.Chatbot import Chatbot
+from .modules.assistant.Assistant import Assistant
 from .logger.logger import setup_logging
 
 @library
-class RobotFrameworkAI(RealTestDataGenerator, Chatbot):
+class RobotFrameworkAI(RealTestDataGenerator, Chatbot, Assistant):
     """
     """
     @keyword

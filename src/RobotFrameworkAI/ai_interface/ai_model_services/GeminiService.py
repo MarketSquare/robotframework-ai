@@ -16,7 +16,7 @@ class GeminiService(AIModelStrategy):
         super().__init__()
         self.name = "gemini"
         client = None
-        # self.ai_tools = self._discover_tools("openai_tools", GeminiTool, client)
+        # self.ai_tools = self._discover_tools("gemini_tools", GeminiTool, client)
         
     def send_prompt(self, prompt):
         return "Beep boop"

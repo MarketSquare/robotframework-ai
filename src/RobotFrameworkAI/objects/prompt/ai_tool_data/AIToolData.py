@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
+@dataclass
 class AIToolData:
-    def __init__(self) -> None:
-        pass
+    pass

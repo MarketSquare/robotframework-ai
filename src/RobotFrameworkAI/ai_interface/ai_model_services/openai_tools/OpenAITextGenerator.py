@@ -10,18 +10,23 @@ logger = logging.getLogger(__name__)
 
 
 class OpenAITextGenerator(OpenAITool, TextGeneratorTool):
+    """
+    The AI tool in charge of handling all text generation for OpenAI
+
+    Given a prompt, will send it to OpenAI API, and return a Response.
+    """
     def __init__(self, client) -> None:
         OpenAITool.__init__(self)
         TextGeneratorTool.__init__(self)
         self.client:OpenAI = client
     
     def call_ai_tool(self, prompt):
-
         model = self.default_model if prompt.config.model is None else prompt.config.model
+        messages = self.format_prompt_messages(prompt.message.system, prompt.message.user, prompt.message.history)
         arguments = prompt.parameters
         chat_completion = self.client.chat.completions.create(
             model = model,
-            messages = prompt.message,
+            messages = messages,
             response_format= prompt.config.response_format,
             max_tokens = arguments["max_tokens"],
             temperature = arguments["temperature"],
