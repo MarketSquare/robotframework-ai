@@ -56,13 +56,35 @@ Generate 10 addresses from Finland using the gpt-3.5-turbo from OpenAI in the de
 ### Phone Numbers
 When generating phone numbers, additional arguments are available.
 These arguments are as follows:
-- **country:str:** The country on which the [number prefix](https://www.iban.com/dialing-codes) and phone format is based. If prefix or phone format are defined in arguments, they override this argument. If None, will generate numbers from different countries around the world in international format. Default = None
-- **prefix:str:**
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-- **phone_format:str:**
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-- **mix_format:str:**
-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+- **country: str:** The country on which the [number prefix](https://www.iban.com/dialing-codes) and phone format is based. If prefix or phone format are defined in kwargs, only country prefix value stays, but format is defined exactly by prefix and phone format. If None, will generate numbers from different countries around the world in international format. Default = None
+- **prefix: str:** Prefix type for output phone numbers. Takes values either as example (+xxx, 00xxx...) or name of the format ('international'). If None, prefix is set to international '+xxx'. If phone_format is defined, prefix gets overriden. Default = None
+- **phone_format: str:** Exact definition of phone format user wants to output e.g. 
+(212)456-7890
++212-456-7890
+212.456.7890
+User can define prefix, dashes, spaces, parenthesses and other symbols if needed. Overrides prefix argument and keeps the country argument. If None, the format is either international or typical for the country that is specified via country argument. Default = None
+- **mix_format: bool = False** Phone number format mixer. If set to True, generated list of phone numbers has different phone number formats and prefix types. If False, output list of numbers is in the same format. Default = False
+
+### Examples
+Generate 3 phone numbers from anywhere in the world in international phone number format without dashes or spaces using OpenAI:
+
+    Generate Test Data    openai    phone_number 
+
+    # Output: ['+819012345678', '+442071231234', '+33123456789'] 
+
+Generate 10 phone numbers from Norway with phone format set to "0047 8765 4321", using the gpt-3.5-turbo from OpenAI in the default format with a token limit at 1024, temperature at 1, top p at .5 and frequency- and presence penalty at 0, 
+
+    Generate Test Data    openai    phone_number    gpt-3.5-turbo    10    None    1024    1    .5    0    0    country=norway phone_format="0047 xxxx xxxx"
+
+    # Output: ['0047 2198 7654', '0047 5432 1987', '0047 4567 8901', '0047 8765 4321', '0047 3210 9876', '0047 6543 2109', '0047 7890 6543', '0047 1098 7654', '0047 9876 5432', '0047 2345 6789']
+
+Generate 10 phone numbers from around the world with mix_format = True
+
+    Generate Test Data    openai    phone_number    mix_format = True
+
+    #Output: //ADD OUTPUT WHEN BUG FIXED//
+
+
 
 
 ## Chatbot
