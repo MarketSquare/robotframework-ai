@@ -9,7 +9,7 @@ ${AI_MODEL}            openai
 ${TYPE}                phone_number
 ${MODEL}               gpt-3.5-turbo
 ${AMOUNT}              3
-${FORMAT}              "{'addresses':[{'address': address}]}"
+${FORMAT}              "{'phone_numbers':[{'phone_number': phone_number}]}"
 ${MAX_TOKENS}          256
 ${TEMPERATURE}         1
 ${TOP_P}               1

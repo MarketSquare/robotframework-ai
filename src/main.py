@@ -10,13 +10,13 @@ def real_test_data_generator():
     generator = RTDG()
     generator.set_ai_model("openai")
     generator.set_type("phone_number")
-    generator.set_amount(5)
+    generator.set_amount(8)
     # generator.set_format("")
 
     # generator.set_kwarg("prefix", "00")
-    generator.set_kwarg("phone_format", "00xxxxxxxxx")
-    generator.set_kwarg("country", "Czechia")
-    generator.set_kwarg("mix_format", "False")
+    # generator.set_kwarg("phone_format", "+420739585421")
+    # generator.set_kwarg("country", "Czechia")
+    # generator.set_kwarg("mix_format", "True")
 
     response = generator.generate_test_data()
     print("\n\n\n", response, "\n\n\n")
