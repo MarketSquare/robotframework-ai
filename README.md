@@ -5,6 +5,51 @@
 It can generate test data for you using the `RealTestDataGenerator` but also reply to your
 messages with the `Chatbot`.
 
+## Setup
+
+To setup the library:
+
+1. Start by cloning this repository.
+2. Open a terminal and locate the `robotframework-ai` folder.
+3. Use the following command to create the package.
+
+        python setup.py sdist bdist_wheel
+
+    This requires the wheel package to be installed, which can be installed with:
+
+        pip install wheel
+
+4. To install the library using the package just created, use the following command.
+
+        pip install .\dist\RobotFrameworkAI-0.0.1-py3-none-any.whl
+
+5. Setup the API key for the AI you want to use. This can be done by creating a new environment variable called `OPENAI_KEY` with your key as the value. More information about this in the AI models header below.
+6. The library is now properly setup, to confirm it works, run the following code in a robot file. This will generate 3 addresses and create a log.html file.
+
+        *** Settings ***
+        Library   RobotFrameworkAI
+
+
+        *** Test Cases ***
+        Exec Test
+            [Documentation]    Test
+            ${response}    Generate Test Data    openai    address
+            Log    ${response}
+
+    Opening this testlog file in a browser and opening the suite `Test`, the test `Exec test` and the keyword `Log` will reveal a list with the 3 addresses in the `INFO` section.
+
+    ![testlog](https://github.com/user-attachments/assets/b97ade59-0156-4817-aff1-555637eddcd1)
+
+## AI models
+
+Each module in the RobotFramework-AI library can support multiple different AI models. Each AI model needs an API key for the generation of test data.
+This key gets read directly from your environment variables. Each AI model has their own API key. To define a key, create a new variable with the name of
+the AI model capitalized followed by "_KEY". Then set this variable to your key. At the moment only OpenAI is supported.
+
+**Example API keys**
+- OPENAI_KEY=278bxw4m89monwxmu89wm98ufx8hwxfhqwifmxou09qwxp09jmx
+- GEMINI_KEY=cavhjbcZCJKnvmzxcnzkcjkczckzcskjnjn7h38nwd923hdnind
+
 ## RealTestDataGenerator
 
 `RealTestDataGenerator` can generate test data for the `Robot Framework` similar to
@@ -101,16 +146,6 @@ Declare a rule in the first message and refer to it in the second message
 Generate the meaning of life in a json format using the gpt-3.5-turbo from OpenAI in the default format with a token limit at 1024, temperature at 2, top p at .5 and frequency- and presence penalty at 0 without using the previous messages in the response.
 
     Generate Response    openai    What is the meaning of life? In json.    gpt-3.5-turbo    1024    2    .5    0    0    False    {"type": "json_object"}   
-
-## AI models
-
-Each module in the RobotFramework-AI library can support multiple different AI models. Each AI model needs an API key for the generation of test data.
-This key gets read directly from your environment variables. Each AI model has their own API key. To define a key, create a new variable with the name of
-the AI model capitalized followed by "_KEY". Then set this variable to your key.
-
-**Example API keys**
-OPENAI_KEY=278bxw4m89monwxmu89wm98ufx8hwxfhqwifmxou09qwxp09jmx
-GEMINI_KEY=cavhjbcZCJKnvmzxcnzkcjkczckzcskjnjn7h38nwd923hdnind
 
 ## Setters
 
