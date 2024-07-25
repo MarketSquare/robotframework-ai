@@ -10,8 +10,8 @@ class OpenAITool(AIModelTool):
     def __init__(self) -> None:
         super().__init__()
         self.ai_model_name:str = "openai"
-        self.models:list[str] = ["gpt-3.5-turbo", "gpt-4o"]
-        self.default_model:str = "gpt-4o"
+        self.models:list[str] = ["gpt-3.5-turbo", "gpt-4o", "gpt-4o-mini"]
+        self.default_model:str = "gpt-4o-mini"
 
     def format_prompt_message(self, role:str, message:str):
         """
