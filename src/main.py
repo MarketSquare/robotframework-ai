@@ -3,8 +3,9 @@ from robot import run
 
 from RobotFrameworkAI.modules.chatbot.Chatbot import Chatbot
 from RobotFrameworkAI.modules.real_test_data_generator.RealTestDataGenerator import RealTestDataGenerator as RTDG
+from RobotFrameworkAI.modules.assistant.Assistant import Assistant
 
-from RobotFrameworkAI.logger.logger_config import setup_logging
+from RobotFrameworkAI.logger.logger import setup_logging
 
 def real_test_data_generator():
     generator = RTDG()
@@ -16,10 +17,10 @@ def real_test_data_generator():
     print("\n\n\n", response, "\n\n\n")
 
 def chatbot():
-    message = "If I say water you say fire"
     generator = Chatbot()
     generator.set_ai_model("openai")
-    generator.set_message(message)
+    user_message = "If I say water you say fire"
+    generator.set_message(user_message)
     response = generator.generate_response()
     print("\n\n\n", response, "\n\n\n")
     message = "Water"
@@ -28,7 +29,19 @@ def chatbot():
     response = generator.generate_response()
     print("\n\n\n", response, "\n\n\n")
 
-
+def assistant():
+    assistant = Assistant()
+    assistant.set_name("Assistant")
+    assistant.set_instructions("You are a software enigineer.")
+    assistant.set_ai_model("openai")
+    assistant.set_message((
+        "Do you see how I can improve my code?"
+    ))
+    assistant.create_assistant()
+    assistant.update_assistant()
+    assistant.attach_files(file_paths=["src/RobotFrameworkAI"])
+    print(assistant.send_message())
+    assistant.delete_assistant()
 def robot_tests(s=''):
     run("atest/"+s, listener="atest/listeners/LoggerListener.py")
 
@@ -38,7 +51,8 @@ def pytests():
 if __name__ == "__main__":
     setup_logging(enabled=True, for_tests=False, console_logging=False, file_logging=True)
     
-    # real_test_data_generator()
-    # chatbot()
-    # robot_tests()
-    # pytests()
+    real_test_data_generator()
+    chatbot()
+    assistant()
+    robot_tests()
+    pytests()

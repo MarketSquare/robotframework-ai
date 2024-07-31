@@ -6,58 +6,27 @@ from RobotFrameworkAI.objects.response.Response import Response
 from RobotFrameworkAI.objects.response.ResponseMetadata import ResponseMetadata
 import logging
 
+from RobotFrameworkAI.ai_interface.ai_model_services.openai_tools.OpenAITool import OpenAITool
+
+# List of allowed file extensions
+ALLOWED_EXTENSIONS = {
+    "c", "cpp", "css", "csv", "docx", "gif", "html", "java", "jpeg", "jpg", "js", "json", "md", "pdf", 
+    "php", "png", "pptx", "py", "rb", "tar", "tex", "ts", "txt", "webp", "xlsx", "xml", "zip"
+}
 
 logger = logging.getLogger(__name__)
 
 
 class OpenAIService(AIModelStrategy):
     """
-    This class is an implementation of the AIModelStrategy interface.
-    This is an strategy to handle task of responding to prompts.
-    This strategy does so by using the API from OpenAI.
+    The class in charge of handling communication with the OpenAI API 
+
+    This class is an implementation of the abstract class AIModelStrategy.
+    Prompts directed at the OpenAI API, will get send to the right OpenAI AI tool.
+    All the logic doing that can be found in the abstract class AIModelStrategy. 
     """
     def __init__(self) -> None:
         super().__init__()
         self.name = "openai"
-        key = os.environ["OPENAI_KEY"]
-        self.ai_model = OpenAI(api_key=key)
-        self.default_model = "gpt-3.5-turbo"
-
-    def send_prompt(self, prompt):
-        model = prompt.config.model
-        if prompt.config.model is None:
-            model = self.default_model
-        self.validate_prompt(model)
-        arguments = prompt.parameters
-        chat_completion = self.ai_model.chat.completions.create(
-            model = model,
-            messages = prompt.message,
-            response_format= prompt.config.response_format,
-            max_tokens = arguments["max_tokens"],
-            temperature = arguments["temperature"],
-            top_p = arguments["top_p"],
-            frequency_penalty = arguments["frequency_penalty"],
-            presence_penalty = arguments["presence_penalty"]
-        )
-        logger.debug(f"OpenAI chat completion: {chat_completion}")
-        metadata = ResponseMetadata(
-            self.name,
-            model,
-            chat_completion.choices[0].finish_reason,
-            chat_completion.usage.prompt_tokens,
-            chat_completion.usage.completion_tokens,
-            chat_completion.created
-        )
-        response = Response(
-            chat_completion.choices[0].message.content,
-            metadata
-        )
-        return response
-    
-    def validate_prompt(self, model:str):
-        models = ["gpt-3.5-turbo"]
-        if model not in models:
-            error_message = f"Invalid model: `{model}`. Valid models are: `{'`, `'.join(models)}`"
-            logger.error(error_message)
-            raise ValueError(error_message)
-        return True
+        client = OpenAI(api_key=os.environ["OPENAI_KEY"])
+        self.ai_tools = self._discover_tools("openai_tools", OpenAITool, client)

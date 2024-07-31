@@ -1,15 +1,29 @@
+from pathlib import Path
+from typing import List
 from robot.api.deco import keyword, library
 from functools import wraps
+from robotlibcore import DynamicCore
 import inspect
 
 from .modules.real_test_data_generator.RealTestDataGenerator import RealTestDataGenerator
 from .modules.chatbot.Chatbot import Chatbot
-from .logger.logger_config import setup_logging
+from .modules.assistant.Assistant import Assistant
+from .logger.logger import setup_logging
 
 @library
-class RobotFrameworkAI(RealTestDataGenerator, Chatbot):
+class RobotFrameworkAI(DynamicCore):
     """
+    RobotFrameworkAI is a custom library for Robot Framework that integrates AI functionalities,
+    including generating real test data, interacting with a chatbot, and managing AI assistants.
     """
+    def __init__(self) -> None:
+        """
+        Initializes the RobotFrameworkAI library with necessary components like RealTestDataGenerator,
+        Chatbot, and Assistant, which are integrated to provide AI capabilities to Robot Framework.
+        """
+        libraries = [RealTestDataGenerator(), Chatbot(), Assistant()]
+        DynamicCore.__init__(self, libraries)
+
     @keyword
     @wraps(setup_logging)
     def setup_logging(self, *args, **kwargs):
