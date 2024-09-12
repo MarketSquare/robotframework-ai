@@ -22,7 +22,7 @@ def get_requirements():
         return file.readlines()
 
 setup(
-    name="RobotFrameworkAI",
+    name="robotframework-ai",
     version="0.0.2",
     classifiers=CLASSIFIERS,
     author="Stijn de Jong",
