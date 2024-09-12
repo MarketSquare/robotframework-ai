@@ -27,5 +27,5 @@ setup(
     include_package_data=True,
     package_data={"": ["*.misc"]},
     python_requires=">=3.8",
-    install_requires=[get_requirements()],
+    #install_requires=[get_requirements()],
 )
