@@ -152,10 +152,9 @@ class RealTestDataGenerator(Module):
         model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, response_format.
 
         Each argument has its own setter, the name of the keyword is 'set' plus the name of the argument e.g. Set AI Model for AI Model.
-        """        
+        """     
         # If arguments are not given directly, get its default value. This is the value of the class attribute with the same name
-        ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, \
-        type, amount, format, kwargs = self.get_default_values_for_arguments(
+        ai_model, model, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, type, amount, format, kwargs = self.get_default_values_for_arguments(
             ai_model=ai_model,
             model=model,
             max_tokens=max_tokens,
@@ -199,8 +198,18 @@ class RealTestDataGenerator(Module):
             presence_penalty,
             response_format
         )
-        response = self.ai_interface.call_ai_tool(prompt)
-        response = generator.format_response(response)
+        logger.debug(f"Prompt: {prompt}")
+        try:
+            response = self.ai_interface.call_ai_tool(prompt)
+            logger.debug(f"Response from AI tool: {response}")
+            response = generator.format_response(response)
+            logger.debug(f"Formatted response: {response}")
+        except Exception as e:
+            error_message = f"Failed to generate test data: {e}"
+            logger.error(error_message)
+            raise ValueError(error_message)
+
+        logger.debug(f"Generated test data: {response}")
         return response
 
     # Validation methods

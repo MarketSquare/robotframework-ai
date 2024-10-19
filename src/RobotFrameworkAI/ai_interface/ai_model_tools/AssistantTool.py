@@ -85,7 +85,7 @@ class AssistantTool(AIToolType):
                 if self.has_allowed_extension(file):
                     full_path = os.path.join(root, file)
                     file_paths.append(full_path)
-        logger.debug(f"Found the following files in `{folder_path}`: `{"`, `".join(file_paths)}`")
+        logger.debug(f"Found the following files in `{folder_path}`: `{'`, `'.join(file_paths)}`")
         return file_paths
 
     @staticmethod
