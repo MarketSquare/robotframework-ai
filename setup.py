@@ -23,7 +23,7 @@ def get_requirements():
 
 setup(
     name="robotframework-ai",
-    version="0.0.2",
+    version="0.0.3",
     classifiers=CLASSIFIERS,
     author="Stijn de Jong",
     author_email="stijndejong125@gmail.com",
