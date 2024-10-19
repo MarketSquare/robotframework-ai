@@ -3,7 +3,9 @@ from RobotFrameworkAI.ai_interface.ai_model_services.openai_tools.OpenAITool imp
 from RobotFrameworkAI.ai_interface.ai_model_tools.AssistantTool import AssistantTool
 from RobotFrameworkAI.objects.response.Response import Response
 from RobotFrameworkAI.objects.response.ResponseMetadata import ResponseMetadata
+import logging
 
+logger = logging.getLogger(__name__)
 
 class OpenAIAssistant(OpenAITool, AssistantTool):
     """
@@ -52,10 +54,9 @@ class OpenAIAssistant(OpenAITool, AssistantTool):
         # Remove empty strings from list
         updated_parameters = [updated_parameter for updated_parameter in updated_parameters if updated_parameter]
         
-        updated_parameters = updated_parameters if updated_parameters else ["no parameters have been updated."]
-        message = f"Succesfully updated assistant `{self.assistant.name}` with id `{self.assistant.id}`. Updated parameters: {", ".join(updated_parameters)}."
+        updated_parameters = updated_parameters if updated_parameters else ["no parameters have been updated."]        
+        message = f"Successfully updated assistant `{self.assistant.name}` with id `{self.assistant.id}`. Updated parameters: {', '.join(updated_parameters)}."
         
-
         self.assistant = self.client.beta.assistants.update(
             self.assistant.id,
             name=assistant_data.name,
@@ -69,6 +70,7 @@ class OpenAIAssistant(OpenAITool, AssistantTool):
         response_metadata = ResponseMetadata(self.tool_name, self.ai_model_name, model)
         response = Response(message, response_metadata)
         return response
+
 
     def get_active_assistant_id(self, _ = None):
         response_metadata = ResponseMetadata(self.tool_name, self.ai_model_name, self.assistant.model)
@@ -111,7 +113,7 @@ class OpenAIAssistant(OpenAITool, AssistantTool):
             tool_resources = {"file_search": {"vector_store_ids": [vector_store.id]}},
         )
         response_metadata = ResponseMetadata(self.tool_name, self.ai_model_name, self.assistant.model)
-        message = f"Succesfully added {len(files)} files to assistant with id `{self.assistant.id}` and name `{self.assistant.name}`. The following files got added: `{"`, `".join([file[0] for file in files])}`"
+        message = f"Succesfully added {len(files)} files to assistant with id `{self.assistant.id}` and name `{self.assistant.name}`. The following files got added: `{'`, `'.join([file[0] for file in files])}`"
         response = Response(message, response_metadata)
         return response
 

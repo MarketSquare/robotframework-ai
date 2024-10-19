@@ -2,6 +2,7 @@
 Documentation    Tests the functionality of the generate test data keyword
 Library    Collections
 Library    ../../src/RobotFrameworkAI/modules/real_test_data_generator/RealTestDataGenerator.py
+Library    ../../src/RobotFrameworkAI/logger/logger.py
 
 
 *** Variables ***
@@ -16,41 +17,41 @@ ${TOP_P}               1
 ${FREQUENCY_PENALTY}   0
 ${PRESENCE_PENALTY}    0
 ${COUNTRY}             Czech Republic
-${GENERATED_TEST_DATA}    ${EMPTY}
-
 
 *** Test Cases ***
 Acceptance Test: Generate Test Data
     [Documentation]    Verify the behavior of generate_test_data keyword with various input arguments
     [Tags]    acceptance
-    When Generate Test Data
-    Then Test Data Is Generated Successfully
-    And Test Data Is In Right Format    ${AMOUNT}
+    Setup Logging
+    Set AI Model    ${AI_MODEL}
+    Set Type    ${TYPE}
+    Set Model    ${MODEL}
+    Set Amount    ${AMOUNT}
+    Set Format    ${FORMAT}
+    Set Max Tokens    ${MAX_TOKENS}
+    Set Temperature    ${TEMPERATURE}
+    Set Top P    ${TOP_P}
+    Set Frequency Penalty    ${FREQUENCY_PENALTY}
+    Set Presence Penalty    ${PRESENCE_PENALTY}
+
+    ${test_data}=    When Generate Test Data
+    Then Test Data Is Generated Successfully    ${test_data}
+    And Test Data Is In Right Format    ${test_data}    ${AMOUNT}
 
 
 *** Keywords ***
 When Generate Test Data
     [Documentation]    Generate test data
-    ${test_data} =    Generate Test Data
-    ...    ${AI_MODEL}
-    ...    ${TYPE}
-    ...    ${MODEL}
-    ...    ${AMOUNT}
-    ...    ${FORMAT}
-    ...    ${MAX_TOKENS}
-    ...    ${TEMPERATURE}
-    ...    ${TOP_P}
-    ...    ${FREQUENCY_PENALTY}
-    ...    ${PRESENCE_PENALTY}
-    ...    country=${COUNTRY}
-    VAR    ${GENERATED_TEST_DATA}    ${test_data}    scope=test
+    ${test_data} =    Generate Test Data    country=${COUNTRY}
+    RETURN    ${test_data}
 
 Then Test Data Is Generated Successfully
     [Documentation]    Check if keyword returned a non-empty list
-    Should Not Be Empty    ${GENERATED_TEST_DATA}
+    [Arguments]    ${test_data}
+    Should Not Be Empty    ${test_data}
 
 And Test Data Is In Right Format
     [Documentation]    Check if the list has the right amount of elements
-    [Arguments]    ${expected_amount}
-    ${actual_amount} =    Get Length    ${GENERATED_TEST_DATA}
+    [Arguments]    ${test_data}    ${expected_amount}
+    ${actual_amount} =    Get Length    ${test_data}
     Should Be Equal As Numbers    ${actual_amount}    ${expected_amount}

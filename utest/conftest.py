@@ -1,6 +1,6 @@
 import pytest
 import logging
-from src.RobotFrameworkAI.logger.logger import setup_logging
+from RobotFrameworkAI.logger.logger import setup_logging
 
 logger = logging.getLogger(__name__)
 
